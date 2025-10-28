@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Download, FileText, CreditCard as Edit3, User, Mail, Phone, MapPin, Briefcase, GraduationCap, Award, Plus, Trash2, Lightbulb, AlertCircle, CheckCircle, Move, Sparkles, Code, Trophy, Languages, Heart, Globe, Linkedin, Github, Image, Users as FileUser } from 'lucide-react';
+import { Download, FileText, CreditCard as Edit3, User, Briefcase, GraduationCap, Award, Plus, Trash2, Lightbulb, AlertCircle, CheckCircle, Move, Sparkles, Code, Trophy, Languages, Heart, Globe, Linkedin, Github, Image, Users as FileUser } from 'lucide-react';
 
 interface EditableResumeFormProps {
   resumeData: any;
@@ -12,8 +12,6 @@ interface EditableResumeFormProps {
 
 const EditableResumeForm: React.FC<EditableResumeFormProps> = ({
   resumeData,
-  template,
-  colorScheme,
   onDataChange,
   onDownloadPDF,
   onDownloadWord
@@ -122,7 +120,7 @@ const EditableResumeForm: React.FC<EditableResumeFormProps> = ({
       validateField(field, value);
     }
 
-    setFormData(prevData => {
+    setFormData((prevData: any) => {
       const newData = { ...prevData };
       if (index !== undefined) {
         if (!newData[section]) newData[section] = [];
@@ -143,7 +141,7 @@ const EditableResumeForm: React.FC<EditableResumeFormProps> = ({
       clearTimeout(debounceRef.current);
     }
     debounceRef.current = setTimeout(() => {
-      setFormData(currentData => {
+      setFormData((currentData: any) => {
         onDataChange(currentData);
         return currentData;
       });
@@ -178,7 +176,7 @@ const EditableResumeForm: React.FC<EditableResumeFormProps> = ({
     const dragIndex = draggedItem.index;
     if (dragIndex === dropIndex) return;
 
-    setFormData(prevData => {
+    setFormData((prevData: any) => {
       const newData = { ...prevData };
       const items = [...newData[type]];
       const draggedItemData = items[dragIndex];
@@ -195,7 +193,7 @@ const EditableResumeForm: React.FC<EditableResumeFormProps> = ({
     setDraggedItem(null);
   };
   const addExperience = () => {
-    setFormData(prevData => {
+    setFormData((prevData: any) => {
       const newData = { ...prevData };
       if (!newData.experience) newData.experience = [];
       newData.experience.push({
@@ -211,7 +209,7 @@ const EditableResumeForm: React.FC<EditableResumeFormProps> = ({
   };
 
   const removeExperience = (index: number) => {
-    setFormData(prevData => {
+    setFormData((prevData: any) => {
       const newData = { ...prevData };
       newData.experience.splice(index, 1);
       isInternalUpdate.current = true;
@@ -221,7 +219,7 @@ const EditableResumeForm: React.FC<EditableResumeFormProps> = ({
   };
 
   const addEducation = () => {
-    setFormData(prevData => {
+    setFormData((prevData: any) => {
       const newData = { ...prevData };
       if (!newData.education) newData.education = [];
       newData.education.push({
@@ -236,7 +234,7 @@ const EditableResumeForm: React.FC<EditableResumeFormProps> = ({
   };
 
   const removeEducation = (index: number) => {
-    setFormData(prevData => {
+    setFormData((prevData: any) => {
       const newData = { ...prevData };
       newData.education.splice(index, 1);
       isInternalUpdate.current = true;
@@ -246,7 +244,7 @@ const EditableResumeForm: React.FC<EditableResumeFormProps> = ({
   };
 
   const addProject = () => {
-    setFormData(prevData => {
+    setFormData((prevData: any) => {
       const newData = { ...prevData };
       if (!newData.projects) newData.projects = [];
       newData.projects.push({ title: '', description: '', url: '' });
@@ -257,7 +255,7 @@ const EditableResumeForm: React.FC<EditableResumeFormProps> = ({
   };
 
   const removeProject = (index: number) => {
-    setFormData(prevData => {
+    setFormData((prevData: any) => {
       const newData = { ...prevData };
       newData.projects.splice(index, 1);
       isInternalUpdate.current = true;
@@ -267,7 +265,7 @@ const EditableResumeForm: React.FC<EditableResumeFormProps> = ({
   };
 
   const addCertification = () => {
-    setFormData(prevData => {
+    setFormData((prevData: any) => {
       const newData = { ...prevData };
       if (!newData.certifications) newData.certifications = [];
       newData.certifications.push({ name: '', issuer: '', year: '' });
@@ -278,7 +276,7 @@ const EditableResumeForm: React.FC<EditableResumeFormProps> = ({
   };
 
   const removeCertification = (index: number) => {
-    setFormData(prevData => {
+    setFormData((prevData: any) => {
       const newData = { ...prevData };
       newData.certifications.splice(index, 1);
       isInternalUpdate.current = true;
@@ -288,7 +286,7 @@ const EditableResumeForm: React.FC<EditableResumeFormProps> = ({
   };
 
   const addAchievement = () => {
-    setFormData(prevData => {
+    setFormData((prevData: any) => {
       const newData = { ...prevData };
       if (!newData.achievements) newData.achievements = [];
       newData.achievements.push({ title: '', description: '' });
@@ -299,7 +297,7 @@ const EditableResumeForm: React.FC<EditableResumeFormProps> = ({
   };
 
   const removeAchievement = (index: number) => {
-    setFormData(prevData => {
+    setFormData((prevData: any) => {
       const newData = { ...prevData };
       newData.achievements.splice(index, 1);
       isInternalUpdate.current = true;
@@ -309,7 +307,7 @@ const EditableResumeForm: React.FC<EditableResumeFormProps> = ({
   };
 
   const addLanguage = () => {
-    setFormData(prevData => {
+    setFormData((prevData: any) => {
       const newData = { ...prevData };
       if (!newData.languages) newData.languages = [];
       newData.languages.push({ name: '', proficiency: '' });
@@ -320,7 +318,7 @@ const EditableResumeForm: React.FC<EditableResumeFormProps> = ({
   };
 
   const removeLanguage = (index: number) => {
-    setFormData(prevData => {
+    setFormData((prevData: any) => {
       const newData = { ...prevData };
       newData.languages.splice(index, 1);
       isInternalUpdate.current = true;
@@ -330,7 +328,7 @@ const EditableResumeForm: React.FC<EditableResumeFormProps> = ({
   };
 
   const addReference = () => {
-    setFormData(prevData => {
+    setFormData((prevData: any) => {
       const newData = { ...prevData };
       if (!newData.references) newData.references = [];
       newData.references.push({ name: '', title: '', contact: '' });
@@ -341,7 +339,7 @@ const EditableResumeForm: React.FC<EditableResumeFormProps> = ({
   };
 
   const removeReference = (index: number) => {
-    setFormData(prevData => {
+    setFormData((prevData: any) => {
       const newData = { ...prevData };
       newData.references.splice(index, 1);
       isInternalUpdate.current = true;
@@ -351,7 +349,7 @@ const EditableResumeForm: React.FC<EditableResumeFormProps> = ({
   };
 
   const addSkillCategory = () => {
-    setFormData(prevData => {
+    setFormData((prevData: any) => {
       const newData = { ...prevData };
       if (!newData.skillsCategories) newData.skillsCategories = [];
       newData.skillsCategories.push({ name: '', category: 'Technical', proficiency: 'Intermediate' });
@@ -362,7 +360,7 @@ const EditableResumeForm: React.FC<EditableResumeFormProps> = ({
   };
 
   const removeSkillCategory = (index: number) => {
-    setFormData(prevData => {
+    setFormData((prevData: any) => {
       const newData = { ...prevData };
       newData.skillsCategories.splice(index, 1);
       isInternalUpdate.current = true;
@@ -372,7 +370,7 @@ const EditableResumeForm: React.FC<EditableResumeFormProps> = ({
   };
 
   const handleSocialLinkChange = (field: string, value: string) => {
-    setFormData(prevData => {
+    setFormData((prevData: any) => {
       const newData = { ...prevData };
       if (!newData.socialLinks) newData.socialLinks = {};
       newData.socialLinks[field] = value;
@@ -384,7 +382,7 @@ const EditableResumeForm: React.FC<EditableResumeFormProps> = ({
       clearTimeout(debounceRef.current);
     }
     debounceRef.current = setTimeout(() => {
-      setFormData(currentData => {
+      setFormData((currentData: any) => {
         onDataChange(currentData);
         return currentData;
       });
@@ -466,7 +464,7 @@ const EditableResumeForm: React.FC<EditableResumeFormProps> = ({
               onClick={() => {
                 const newValue = currentValue.trim() ? `${currentValue}, ${skill}` : skill;
                 setSkillsText(newValue);
-                setFormData(prevData => {
+                setFormData((prevData: any) => {
                   const newData = { ...prevData };
                   newData.skills = newValue.split(',').map((s: string) => s.trim()).filter((s: string) => s);
                   return newData;
@@ -486,27 +484,27 @@ const EditableResumeForm: React.FC<EditableResumeFormProps> = ({
   };
   return (
     <div className="bg-gray-800 rounded-xl shadow-lg p-8 space-y-8">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-center space-x-3">
-          <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg">
-            <Edit3 className="w-6 h-6 text-white" />
+          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg">
+            <Edit3 className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
           </div>
           <div>
-            <h3 className="text-xl font-bold text-white">Edit Resume</h3>
-            <p className="text-gray-300">Customize your resume content with AI assistance</p>
+            <h3 className="text-lg sm:text-xl font-bold text-white">Edit Resume</h3>
+            <p className="text-sm text-gray-300 hidden sm:block">Customize your resume content with AI assistance</p>
           </div>
         </div>
-        <div className="flex space-x-3">
+        <div className="flex flex-wrap gap-2 sm:gap-3">
           <button
             onClick={onDownloadPDF}
-            className="px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl font-semibold hover:from-red-600 hover:to-red-700 transition-all duration-200 flex items-center shadow-lg hover:shadow-xl"
+            className="px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl font-semibold hover:from-red-600 hover:to-red-700 transition-all duration-200 flex items-center shadow-lg hover:shadow-xl text-sm sm:text-base"
           >
             <Download className="w-4 h-4 mr-2" />
             PDF
           </button>
           <button
             onClick={onDownloadWord}
-            className="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl font-semibold hover:from-blue-600 hover:to-blue-700 transition-all duration-200 flex items-center shadow-lg hover:shadow-xl"
+            className="px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl font-semibold hover:from-blue-600 hover:to-blue-700 transition-all duration-200 flex items-center shadow-lg hover:shadow-xl text-sm sm:text-base"
           >
             <FileText className="w-4 h-4 mr-2" />
             Word
@@ -782,7 +780,7 @@ const EditableResumeForm: React.FC<EditableResumeFormProps> = ({
                   const value = e.target.value;
                   setSkillsText(value);
 
-                  setFormData(prevData => {
+                  setFormData((prevData: any) => {
                     const newData = { ...prevData };
                     newData.skills = value.split(',').map((skill: string) => skill.trim()).filter((skill: string) => skill);
                     return newData;
@@ -793,7 +791,7 @@ const EditableResumeForm: React.FC<EditableResumeFormProps> = ({
                     clearTimeout(debounceRef.current);
                   }
                   debounceRef.current = setTimeout(() => {
-                    setFormData(currentData => {
+                    setFormData((currentData: any) => {
                       onDataChange(currentData);
                       return currentData;
                     });
@@ -1085,7 +1083,7 @@ const EditableResumeForm: React.FC<EditableResumeFormProps> = ({
               const value = e.target.value;
               setHobbiesText(value);
 
-              setFormData(prevData => {
+              setFormData((prevData: any) => {
                 const newData = { ...prevData };
                 newData.hobbies = value.split(',').map((hobby: string) => hobby.trim()).filter((hobby: string) => hobby);
                 return newData;
@@ -1096,7 +1094,7 @@ const EditableResumeForm: React.FC<EditableResumeFormProps> = ({
                 clearTimeout(debounceRef.current);
               }
               debounceRef.current = setTimeout(() => {
-                setFormData(currentData => {
+                setFormData((currentData: any) => {
                   onDataChange(currentData);
                   return currentData;
                 });

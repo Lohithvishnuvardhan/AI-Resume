@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { FileText, CheckCircle, Upload, Zap, Shield, Clock, ChevronDown, ChevronUp, Star, Award, Lock, Eye, Download } from 'lucide-react';
+import { useState } from 'react';
+import { FileText, CheckCircle, Upload, Zap, Shield, ChevronDown, ChevronUp, Star, Award, Lock, Eye, Download } from 'lucide-react';
 import PolicyModal from './PolicyModal';
 
 interface LandingPageProps {
@@ -123,9 +123,9 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900 relative overflow-hidden">
       {/* Animated Background Effects */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute top-1/2 -right-20 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
-        <div className="absolute bottom-1/4 left-1/3 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '2s'}}></div>
+        <div className="hidden sm:block absolute top-1/4 -left-20 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="hidden sm:block absolute top-1/2 -right-20 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
+        <div className="hidden sm:block absolute bottom-1/4 left-1/3 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '2s'}}></div>
       </div>
 
       {/* Navigation Bar */}
@@ -167,8 +167,8 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
                 Contact
               </button>
               <button
-                onClick={onGetStarted}
-                className="px-4 lg:px-6 py-2 lg:py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-semibold hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 text-sm lg:text-base"
+                onClick={() => onGetStarted?.()}
+                className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-semibold text-center"
               >
                 Create Resume
               </button>
@@ -199,10 +199,16 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
                   Contact
                 </button>
                 <button
-                  onClick={onGetStarted}
-                  className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-semibold text-center"
+                  onClick={() => { onGetStarted?.(); setShowMobileMenu(false); }}
+                  className="group px-6 sm:px-8 lg:px-10 py-3 sm:py-4 lg:py-5 bg-gradient-to-r from-blue-600 to-cyan-600 text-white text-base sm:text-lg lg:text-xl rounded-xl sm:rounded-2xl font-bold hover:from-blue-700 hover:to-cyan-700 transition-all shadow-2xl hover:shadow-blue-500/50 transform hover:scale-105 relative overflow-hidden"
                 >
-                  Create Resume
+                  <span className="relative z-10 flex items-center justify-center gap-2">
+                    Create Resume Now
+                    <svg className="w-6 h-6 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-cyan-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 </button>
               </div>
             </div>
@@ -234,7 +240,7 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
 
           <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 mb-8 sm:mb-10 lg:mb-12 px-3">
             <button
-              onClick={onGetStarted}
+              onClick={() => onGetStarted?.()}
               className="group px-6 sm:px-8 lg:px-10 py-3 sm:py-4 lg:py-5 bg-gradient-to-r from-blue-600 to-cyan-600 text-white text-base sm:text-lg lg:text-xl rounded-xl sm:rounded-2xl font-bold hover:from-blue-700 hover:to-cyan-700 transition-all shadow-2xl hover:shadow-blue-500/50 transform hover:scale-105 relative overflow-hidden"
             >
               <span className="relative z-10 flex items-center justify-center gap-2">
@@ -298,7 +304,7 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
                 Upload your existing resume or start from scratch with our guided templates.
               </p>
               <button
-                onClick={onGetStarted}
+                onClick={() => onGetStarted()}
                 className="text-blue-400 font-semibold hover:text-blue-300 transition-colors flex items-center gap-2 mx-auto text-sm sm:text-base"
               >
                 Try This Step →
@@ -318,7 +324,7 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
                 Our AI analyzes and enhances your resume for maximum impact and ATS compatibility.
               </p>
               <button
-                onClick={onGetStarted}
+                onClick={() => onGetStarted()}
                 className="text-cyan-400 font-semibold hover:text-cyan-300 transition-colors flex items-center gap-2 mx-auto text-sm sm:text-base"
               >
                 Try This Step →
@@ -338,7 +344,7 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
                 Download your professional resume in PDF or Word format and start applying!
               </p>
               <button
-                onClick={onGetStarted}
+                onClick={() => onGetStarted()}
                 className="text-teal-400 font-semibold hover:text-teal-300 transition-colors flex items-center gap-2 mx-auto text-sm sm:text-base"
               >
                 Try This Step →
@@ -494,7 +500,7 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
               Join 1M+ professionals who built their careers with ResumeAI Pro
             </p>
             <button
-              onClick={onGetStarted}
+              onClick={() => onGetStarted?.()}
               className="px-6 py-3 sm:px-8 sm:py-4 lg:px-10 lg:py-5 bg-gradient-to-r from-blue-600 to-cyan-600 text-white text-base sm:text-lg lg:text-xl rounded-lg sm:rounded-xl font-bold hover:from-blue-700 hover:to-cyan-700 transition-all shadow-2xl hover:shadow-3xl transform hover:scale-105 inline-flex items-center gap-2"
             >
               <span className="hidden sm:inline">Start Building Your Resume Now</span>
@@ -573,7 +579,7 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
       {/* Sticky Mobile CTA */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-gradient-to-r from-blue-600 to-cyan-600 px-3 py-3 shadow-2xl z-50 border-t border-blue-500/50 backdrop-blur-sm">
         <button
-          onClick={onGetStarted}
+          onClick={() => onGetStarted()}
           className="w-full py-3 bg-white text-blue-600 rounded-lg font-bold text-base hover:bg-blue-50 transition-all flex items-center justify-center gap-2 shadow-lg active:scale-95"
         >
           <Zap className="w-5 h-5" />
