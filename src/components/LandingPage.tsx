@@ -167,8 +167,8 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
                 Contact
               </button>
               <button
-                onClick={() => onGetStarted?.()}
-                className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-semibold text-center"
+                onClick={() => onGetStarted()}
+                className="px-4 lg:px-6 py-2 lg:py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-semibold hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 text-sm lg:text-base"
               >
                 Create Resume
               </button>
@@ -199,16 +199,10 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
                   Contact
                 </button>
                 <button
-                  onClick={() => { onGetStarted?.(); setShowMobileMenu(false); }}
-                  className="group px-6 sm:px-8 lg:px-10 py-3 sm:py-4 lg:py-5 bg-gradient-to-r from-blue-600 to-cyan-600 text-white text-base sm:text-lg lg:text-xl rounded-xl sm:rounded-2xl font-bold hover:from-blue-700 hover:to-cyan-700 transition-all shadow-2xl hover:shadow-blue-500/50 transform hover:scale-105 relative overflow-hidden"
+                  onClick={() => { onGetStarted(); setShowMobileMenu(false); }}
+                  className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-semibold text-center"
                 >
-                  <span className="relative z-10 flex items-center justify-center gap-2">
-                    Create Resume Now
-                    <svg className="w-6 h-6 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                    </svg>
-                  </span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-cyan-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  Create Resume
                 </button>
               </div>
             </div>
@@ -240,7 +234,7 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
 
           <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 mb-8 sm:mb-10 lg:mb-12 px-3">
             <button
-              onClick={() => onGetStarted?.()}
+              onClick={() => onGetStarted()}
               className="group px-6 sm:px-8 lg:px-10 py-3 sm:py-4 lg:py-5 bg-gradient-to-r from-blue-600 to-cyan-600 text-white text-base sm:text-lg lg:text-xl rounded-xl sm:rounded-2xl font-bold hover:from-blue-700 hover:to-cyan-700 transition-all shadow-2xl hover:shadow-blue-500/50 transform hover:scale-105 relative overflow-hidden"
             >
               <span className="relative z-10 flex items-center justify-center gap-2">
@@ -579,7 +573,7 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
       {/* Sticky Mobile CTA */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-gradient-to-r from-blue-600 to-cyan-600 px-3 py-3 shadow-2xl z-50 border-t border-blue-500/50 backdrop-blur-sm">
         <button
-          onClick={() => onGetStarted()}
+          onClick={() => onGetStarted?.()}
           className="w-full py-3 bg-white text-blue-600 rounded-lg font-bold text-base hover:bg-blue-50 transition-all flex items-center justify-center gap-2 shadow-lg active:scale-95"
         >
           <Zap className="w-5 h-5" />
@@ -589,34 +583,34 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
 
       {/* Sample Preview Modal */}
       {previewSample !== null && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4" onClick={() => setPreviewSample(null)}>
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl max-w-4xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-auto" onClick={(e) => e.stopPropagation()}>
-            <div className={`sticky top-0 p-6 text-white flex items-center justify-between ${
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-0 sm:p-4" onClick={() => setPreviewSample(null)}>
+          <div className="bg-white rounded-none sm:rounded-2xl shadow-2xl max-w-4xl w-full h-full sm:h-auto sm:max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <div className={`sticky top-0 p-4 sm:p-6 text-white flex items-center justify-between z-10 ${
               previewSample === 0 ? 'bg-gradient-to-r from-blue-600 to-cyan-600' :
               previewSample === 1 ? 'bg-gradient-to-r from-slate-800 to-gray-900' :
               'bg-gradient-to-r from-teal-600 to-cyan-600'
             }`}>
               <div>
-                <h3 className="text-2xl font-bold mb-1">
+                <h3 className="text-lg sm:text-2xl font-bold mb-1">
                   {['Modern Professional', 'Executive Style', 'Creative Design'][previewSample]}
                 </h3>
-                <p className="text-white/90">Sample Resume Template</p>
+                <p className="text-white/90 text-sm sm:text-base">Sample Resume Template</p>
               </div>
               <button
                 onClick={() => setPreviewSample(null)}
-                className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors"
+                className="w-8 h-8 sm:w-10 sm:h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors flex-shrink-0"
               >
-                <span className="text-2xl">×</span>
+                <span className="text-xl sm:text-2xl">×</span>
               </button>
             </div>
 
-            <div className="p-8">
+            <div className="p-4 sm:p-8 pb-20 sm:pb-8">
               {previewSample === 0 && (
-                <div className="bg-white rounded-lg p-10 shadow-lg border-l-8 border-blue-600">
+                <div className="bg-white rounded-lg p-4 sm:p-10 shadow-lg border-l-4 sm:border-l-8 border-blue-600">
                   <div className="max-w-3xl mx-auto">
-                    <div className="border-b-4 border-blue-600 pb-6 mb-6">
-                      <h1 className="text-5xl font-bold text-gray-900 mb-2">Sarah Johnson</h1>
-                      <p className="text-xl text-blue-600 font-semibold mb-3">Senior Product Manager</p>
+                    <div className="border-b-2 sm:border-b-4 border-blue-600 pb-4 sm:pb-6 mb-4 sm:mb-6">
+                      <h1 className="text-3xl sm:text-5xl font-bold text-gray-900 mb-2">Sarah Johnson</h1>
+                      <p className="text-lg sm:text-xl text-blue-600 font-semibold mb-3">Senior Product Manager</p>
                       <div className="text-gray-600 flex flex-wrap gap-4 text-sm">
                         <span>sarah.johnson@email.com</span>
                         <span>•</span>
@@ -691,11 +685,11 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
               )}
 
               {previewSample === 1 && (
-                <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg p-10 shadow-2xl">
-                  <div className="max-w-3xl mx-auto bg-white p-8 shadow-xl">
-                    <div className="text-center border-b-2 border-gray-800 pb-6 mb-8">
-                      <h1 className="text-5xl font-serif font-bold text-gray-900 mb-2">Michael Anderson</h1>
-                      <p className="text-xl text-gray-700 font-semibold mb-2">Chief Financial Officer</p>
+                <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg p-4 sm:p-10 shadow-2xl">
+                  <div className="max-w-3xl mx-auto bg-white p-4 sm:p-8 shadow-xl">
+                    <div className="text-center border-b-2 border-gray-800 pb-4 sm:pb-6 mb-6 sm:mb-8">
+                      <h1 className="text-3xl sm:text-5xl font-serif font-bold text-gray-900 mb-2">Michael Anderson</h1>
+                      <p className="text-lg sm:text-xl text-gray-700 font-semibold mb-2">Chief Financial Officer</p>
                       <div className="text-gray-600 text-sm">
                         <p>michael.anderson@executive.com | +1 (555) 234-5678</p>
                         <p>New York, NY 10022 | linkedin.com/in/michael-anderson-cfo</p>
@@ -782,12 +776,12 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
               )}
 
               {previewSample === 2 && (
-                <div className="bg-gradient-to-br from-teal-50 via-cyan-50 to-blue-50 rounded-2xl p-10 shadow-2xl">
+                <div className="bg-gradient-to-br from-teal-50 via-cyan-50 to-blue-50 rounded-2xl p-4 sm:p-10 shadow-2xl">
                   <div className="max-w-3xl mx-auto">
-                    <div className="grid grid-cols-3 gap-6 mb-8">
-                      <div className="col-span-2">
-                        <h1 className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-cyan-600 mb-3">Emma Chen</h1>
-                        <p className="text-2xl font-bold text-gray-800 mb-4">Creative Director & UX Designer</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
+                      <div className="sm:col-span-2">
+                        <h1 className="text-4xl sm:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-cyan-600 mb-3">Emma Chen</h1>
+                        <p className="text-xl sm:text-2xl font-bold text-gray-800 mb-4">Creative Director & UX Designer</p>
                         <p className="text-gray-700 leading-relaxed">
                           Award-winning creative professional specializing in user-centered design and brand storytelling. Passionate about crafting beautiful, intuitive experiences that delight users and drive business results.
                         </p>
@@ -803,8 +797,8 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-3 gap-6">
-                      <div className="col-span-2 space-y-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+                      <div className="sm:col-span-2 space-y-6">
                         <div>
                           <div className="flex items-center gap-3 mb-4">
                             <div className="w-12 h-1 bg-gradient-to-r from-teal-600 to-cyan-600 rounded-full"></div>
@@ -908,10 +902,10 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
                 </div>
               )}
 
-              <div className="mt-8 flex gap-4 justify-center">
+              <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
                 <button
                   onClick={handleDownloadSample}
-                  className={`px-6 py-3 text-white rounded-lg font-semibold transition-all shadow-lg hover:shadow-xl flex items-center gap-2 ${
+                  className={`px-4 sm:px-6 py-2 sm:py-3 text-white rounded-lg font-semibold transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2 text-sm sm:text-base ${
                     previewSample === 0 ? 'bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700' :
                     previewSample === 1 ? 'bg-gradient-to-r from-slate-700 to-gray-900 hover:from-slate-800 hover:to-black' :
                     'bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700'
@@ -925,7 +919,7 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
                     const templateId = previewSample === 0 ? 'modern-executive' : previewSample === 1 ? 'executive-gold' : 'creative-designer';
                     onGetStarted(templateId);
                   }}
-                  className="px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg font-semibold hover:from-green-700 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl"
+                  className="px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg font-semibold hover:from-green-700 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl text-sm sm:text-base"
                 >
                   Create Your Own
                 </button>
