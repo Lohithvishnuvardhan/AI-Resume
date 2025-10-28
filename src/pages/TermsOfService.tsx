@@ -1,0 +1,185 @@
+import React from 'react';
+import { FileText, ArrowLeft } from 'lucide-react';
+
+export default function TermsOfService() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900">
+      <nav className="fixed top-0 left-0 right-0 bg-gray-900/95 backdrop-blur-lg border-b border-gray-800 z-50 shadow-lg">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center gap-2">
+              <FileText className="w-8 h-8 text-blue-500" />
+              <span className="text-2xl font-bold text-white">ResumeAI Pro</span>
+            </div>
+            <button
+              onClick={() => window.close()}
+              className="flex items-center gap-2 text-gray-300 hover:text-blue-400 transition-colors font-medium"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              Close
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      <div className="pt-24 pb-16 px-4">
+        <div className="max-w-4xl mx-auto bg-gray-800/50 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-700 p-8 md:p-12">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">Terms of Service</h1>
+          <p className="text-gray-400 mb-8">Last updated: October 5, 2025</p>
+
+          <div className="space-y-8 text-gray-300">
+            <section>
+              <h2 className="text-2xl font-bold text-white mb-4">1. Agreement to Terms</h2>
+              <p className="leading-relaxed">
+                By accessing and using ResumeAI Pro, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to these terms, please do not use our services.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-bold text-white mb-4">2. Use License</h2>
+              <p className="leading-relaxed mb-4">
+                Permission is granted to temporarily download one copy of ResumeAI Pro materials for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:
+              </p>
+              <ul className="list-disc list-inside space-y-2 ml-4">
+                <li>Modify or copy the materials</li>
+                <li>Use the materials for any commercial purpose or public display</li>
+                <li>Attempt to decompile or reverse engineer any software</li>
+                <li>Remove any copyright or proprietary notations</li>
+                <li>Transfer the materials to another person or "mirror" the materials on any other server</li>
+              </ul>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-bold text-white mb-4">3. Account Registration</h2>
+              <p className="leading-relaxed mb-4">
+                To use certain features of our service, you must register for an account. When you register, you agree to:
+              </p>
+              <ul className="list-disc list-inside space-y-2 ml-4">
+                <li>Provide accurate, current, and complete information</li>
+                <li>Maintain and promptly update your account information</li>
+                <li>Maintain the security of your password</li>
+                <li>Accept responsibility for all activities under your account</li>
+                <li>Immediately notify us of any unauthorized use</li>
+              </ul>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-bold text-white mb-4">4. Subscription and Payment</h2>
+              <p className="leading-relaxed mb-4">
+                ResumeAI Pro offers both free and paid subscription plans:
+              </p>
+              <ul className="list-disc list-inside space-y-2 ml-4">
+                <li>Subscriptions are billed in advance on a monthly or annual basis</li>
+                <li>Payment is due immediately upon subscription purchase</li>
+                <li>Subscriptions automatically renew unless cancelled</li>
+                <li>Refunds are available within 30 days of purchase (see Refund Policy)</li>
+                <li>We reserve the right to change pricing with 30 days notice</li>
+              </ul>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-bold text-white mb-4">5. User Content</h2>
+              <p className="leading-relaxed mb-4">
+                You retain all rights to the content you create using our service. By using ResumeAI Pro, you grant us:
+              </p>
+              <ul className="list-disc list-inside space-y-2 ml-4">
+                <li>A license to store and process your content to provide our services</li>
+                <li>Permission to use anonymized data for service improvement</li>
+                <li>The right to display your content within the service</li>
+              </ul>
+              <p className="leading-relaxed mt-4">
+                You are responsible for the accuracy and legality of all content you submit.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-bold text-white mb-4">6. Prohibited Uses</h2>
+              <p className="leading-relaxed mb-4">
+                You may not use ResumeAI Pro for any illegal or unauthorized purpose. You agree not to:
+              </p>
+              <ul className="list-disc list-inside space-y-2 ml-4">
+                <li>Violate any laws or regulations</li>
+                <li>Infringe upon intellectual property rights</li>
+                <li>Upload malicious code or viruses</li>
+                <li>Attempt to gain unauthorized access to our systems</li>
+                <li>Interfere with other users' use of the service</li>
+                <li>Use automated systems to access the service</li>
+                <li>Resell or redistribute our services</li>
+              </ul>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-bold text-white mb-4">7. Service Availability</h2>
+              <p className="leading-relaxed">
+                We strive to maintain 99.9% uptime, but we do not guarantee uninterrupted access to our services. We may temporarily suspend access for maintenance, updates, or unforeseen circumstances. We are not liable for any losses resulting from service interruptions.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-bold text-white mb-4">8. Disclaimer</h2>
+              <p className="leading-relaxed">
+                The materials and services on ResumeAI Pro are provided on an 'as is' basis. ResumeAI Pro makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-bold text-white mb-4">9. Limitations of Liability</h2>
+              <p className="leading-relaxed">
+                In no event shall ResumeAI Pro or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use ResumeAI Pro materials, even if ResumeAI Pro or a ResumeAI Pro authorized representative has been notified of the possibility of such damage.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-bold text-white mb-4">10. Indemnification</h2>
+              <p className="leading-relaxed">
+                You agree to indemnify, defend, and hold harmless ResumeAI Pro, its officers, directors, employees, and agents from any claims, damages, losses, or expenses arising from your use of the service or violation of these terms.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-bold text-white mb-4">11. Termination</h2>
+              <p className="leading-relaxed mb-4">
+                We may terminate or suspend your account and access to our services:
+              </p>
+              <ul className="list-disc list-inside space-y-2 ml-4">
+                <li>For violation of these Terms of Service</li>
+                <li>For fraudulent or illegal activity</li>
+                <li>At your request to delete your account</li>
+                <li>For prolonged inactivity (12+ months)</li>
+              </ul>
+              <p className="leading-relaxed mt-4">
+                Upon termination, your right to use the service will immediately cease.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-bold text-white mb-4">12. Changes to Terms</h2>
+              <p className="leading-relaxed">
+                We reserve the right to modify these terms at any time. We will notify users of any material changes via email or through the service. Your continued use of ResumeAI Pro after such modifications constitutes acceptance of the updated terms.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-bold text-white mb-4">13. Governing Law</h2>
+              <p className="leading-relaxed">
+                These terms shall be governed by and construed in accordance with the laws of the State of California, without regard to its conflict of law provisions.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-bold text-white mb-4">14. Contact Information</h2>
+              <p className="leading-relaxed mb-4">
+                Questions about the Terms of Service should be sent to us:
+              </p>
+              <ul className="list-none space-y-2 ml-4">
+                <li>Email: legal@resumeaipro.com</li>
+                <li>Address: 123 AI Street, San Francisco, CA 94105</li>
+                <li>Phone: 1-800-RESUME-AI</li>
+              </ul>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
