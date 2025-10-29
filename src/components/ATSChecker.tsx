@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Shield, CheckCircle, AlertTriangle, XCircle, Target, FileText, Eye, TrendingUp, Award, Lightbulb, Search, Plus, Sparkles } from 'lucide-react';
+import { Shield, CheckCircle, AlertTriangle, XCircle, Target, Eye, TrendingUp, Award, Lightbulb, Search, Plus, Sparkles } from 'lucide-react';
 
 interface ATSCheckerProps {
   resumeData: any;
@@ -299,24 +299,24 @@ const ATSChecker: React.FC<ATSCheckerProps> = ({ resumeData, score, onScoreChang
 
   const scoreGrade = getScoreGrade(score);
   return (
-    <div className="card p-8">
-      <div className="flex items-center justify-between mb-8">
+    <div className="card p-4 sm:p-6 lg:p-8">
+      <div className="flex flex-col gap-4 mb-6 sm:mb-8">
         <div className="flex items-center space-x-3">
-          <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-blue-500 rounded-xl flex items-center justify-center shadow-lg">
-            <Shield className="w-6 h-6 text-white" />
+          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-green-500 to-blue-500 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
+            <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
           </div>
-          <div>
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white">ATS Compatibility</h3>
-            <p className="text-gray-600 dark:text-gray-300">Applicant Tracking System Analysis</p>
+          <div className="flex-1 min-w-0">
+            <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">ATS Compatibility</h3>
+            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">Applicant Tracking System Analysis</p>
           </div>
         </div>
-        
-        <div className={`px-6 py-4 rounded-xl border-2 ${getScoreBg(score)} relative`}>
-          <div className="flex items-center space-x-3">
-            <Target className={`w-5 h-5 ${getScoreColor(score)}`} />
+
+        <div className={`px-4 sm:px-6 py-3 sm:py-4 rounded-xl border-2 ${getScoreBg(score)} relative`}>
+          <div className="flex items-center justify-center space-x-2 sm:space-x-3">
+            <Target className={`w-4 h-4 sm:w-5 sm:h-5 ${getScoreColor(score)} flex-shrink-0`} />
             <div className="text-center">
-              <div className={`text-3xl font-bold ${getScoreColor(score)}`}>{score}%</div>
-              <div className={`text-sm font-semibold ${getScoreColor(score)}`}>Grade {scoreGrade.grade}</div>
+              <div className={`text-2xl sm:text-3xl font-bold ${getScoreColor(score)}`}>{score}%</div>
+              <div className={`text-xs sm:text-sm font-semibold ${getScoreColor(score)}`}>Grade {scoreGrade.grade}</div>
             </div>
           </div>
         </div>
