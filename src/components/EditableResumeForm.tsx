@@ -486,28 +486,28 @@ const EditableResumeForm: React.FC<EditableResumeFormProps> = ({
     <div className="bg-gray-800 rounded-xl shadow-lg p-8 space-y-8">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg">
-            <Edit3 className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+          <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg">
+            <Edit3 className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h3 className="text-lg sm:text-xl font-bold text-white">Edit Resume</h3>
+            <h3 className="text-xl font-bold text-white">Edit Resume</h3>
             <p className="text-sm text-gray-300 hidden sm:block">Customize your resume content with AI assistance</p>
           </div>
         </div>
-        <div className="flex flex-wrap gap-2 sm:gap-3">
+        <div className="flex gap-3 w-full sm:w-auto">
           <button
             onClick={onDownloadPDF}
-            className="px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl font-semibold hover:from-red-600 hover:to-red-700 transition-all duration-200 flex items-center shadow-lg hover:shadow-xl text-sm sm:text-base"
+            className="flex-1 sm:flex-initial px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl font-semibold hover:from-red-600 hover:to-red-700 transition-all duration-200 flex items-center justify-center shadow-lg hover:shadow-xl active:scale-95"
           >
             <Download className="w-4 h-4 mr-2" />
-            PDF
+            <span>PDF</span>
           </button>
           <button
             onClick={onDownloadWord}
-            className="px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl font-semibold hover:from-blue-600 hover:to-blue-700 transition-all duration-200 flex items-center shadow-lg hover:shadow-xl text-sm sm:text-base"
+            className="flex-1 sm:flex-initial px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl font-semibold hover:from-blue-600 hover:to-blue-700 transition-all duration-200 flex items-center justify-center shadow-lg hover:shadow-xl active:scale-95"
           >
             <FileText className="w-4 h-4 mr-2" />
-            Word
+            <span>Word</span>
           </button>
         </div>
       </div>
@@ -626,10 +626,10 @@ const EditableResumeForm: React.FC<EditableResumeFormProps> = ({
           </div>
           <button
             onClick={addExperience}
-            className="px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-all duration-200 flex items-center text-sm font-medium shadow-md hover:shadow-lg transform hover:scale-105"
+            className="px-5 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-200 flex items-center justify-center font-semibold shadow-lg hover:shadow-xl active:scale-95 min-w-[160px]"
           >
-            <Plus className="w-4 h-4 mr-1" />
-            Add Experience
+            <Plus className="w-4 h-4 mr-2" />
+            <span>Add Experience</span>
           </button>
         </div>
         {formData?.experience?.map((exp: any, index: number) => (
@@ -703,10 +703,10 @@ const EditableResumeForm: React.FC<EditableResumeFormProps> = ({
           </div>
           <button
             onClick={addEducation}
-            className="px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-all duration-200 flex items-center text-sm font-medium shadow-md hover:shadow-lg transform hover:scale-105"
+            className="px-5 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-200 flex items-center justify-center font-semibold shadow-lg hover:shadow-xl active:scale-95 min-w-[160px]"
           >
-            <Plus className="w-4 h-4 mr-1" />
-            Add Education
+            <Plus className="w-4 h-4 mr-2" />
+            <span>Add Education</span>
           </button>
         </div>
         {formData?.education?.map((edu: any, index: number) => (
@@ -821,10 +821,10 @@ const EditableResumeForm: React.FC<EditableResumeFormProps> = ({
             <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">Categorized Skills (Optional - for enhanced display)</label>
             <button
               onClick={addSkillCategory}
-              className="px-3 py-1.5 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all duration-200 flex items-center text-xs font-medium"
+              className="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 flex items-center justify-center text-sm font-semibold shadow-md hover:shadow-lg active:scale-95"
             >
-              <Plus className="w-3 h-3 mr-1" />
-              Add Categorized Skill
+              <Plus className="w-3.5 h-3.5 mr-1.5" />
+              <span>Add Skill</span>
             </button>
           </div>
           {formData?.skillsCategories?.map((skill: any, index: number) => (
@@ -879,10 +879,10 @@ const EditableResumeForm: React.FC<EditableResumeFormProps> = ({
           </div>
           <button
             onClick={addProject}
-            className="px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-all duration-200 flex items-center text-sm font-medium shadow-md hover:shadow-lg transform hover:scale-105"
+            className="px-5 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-200 flex items-center justify-center font-semibold shadow-lg hover:shadow-xl active:scale-95 min-w-[140px]"
           >
-            <Plus className="w-4 h-4 mr-1" />
-            Add Project
+            <Plus className="w-4 h-4 mr-2" />
+            <span>Add Project</span>
           </button>
         </div>
         {formData?.projects?.map((project: any, index: number) => (
@@ -930,10 +930,10 @@ const EditableResumeForm: React.FC<EditableResumeFormProps> = ({
           </div>
           <button
             onClick={addCertification}
-            className="px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-all duration-200 flex items-center text-sm font-medium shadow-md hover:shadow-lg transform hover:scale-105"
+            className="px-5 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-200 flex items-center justify-center font-semibold shadow-lg hover:shadow-xl active:scale-95 min-w-[180px]"
           >
-            <Plus className="w-4 h-4 mr-1" />
-            Add Certification
+            <Plus className="w-4 h-4 mr-2" />
+            <span>Add Certification</span>
           </button>
         </div>
         {formData?.certifications?.map((cert: any, index: number) => (
@@ -983,10 +983,10 @@ const EditableResumeForm: React.FC<EditableResumeFormProps> = ({
           </div>
           <button
             onClick={addAchievement}
-            className="px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-all duration-200 flex items-center text-sm font-medium shadow-md hover:shadow-lg transform hover:scale-105"
+            className="px-5 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-200 flex items-center justify-center font-semibold shadow-lg hover:shadow-xl active:scale-95 min-w-[180px]"
           >
-            <Plus className="w-4 h-4 mr-1" />
-            Add Achievement
+            <Plus className="w-4 h-4 mr-2" />
+            <span>Add Achievement</span>
           </button>
         </div>
         {formData?.achievements?.map((achievement: any, index: number) => (
@@ -1027,10 +1027,10 @@ const EditableResumeForm: React.FC<EditableResumeFormProps> = ({
           </div>
           <button
             onClick={addLanguage}
-            className="px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-all duration-200 flex items-center text-sm font-medium shadow-md hover:shadow-lg transform hover:scale-105"
+            className="px-5 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-200 flex items-center justify-center font-semibold shadow-lg hover:shadow-xl active:scale-95 min-w-[160px]"
           >
-            <Plus className="w-4 h-4 mr-1" />
-            Add Language
+            <Plus className="w-4 h-4 mr-2" />
+            <span>Add Language</span>
           </button>
         </div>
         {formData?.languages?.map((language: any, index: number) => (
@@ -1125,10 +1125,10 @@ const EditableResumeForm: React.FC<EditableResumeFormProps> = ({
           </div>
           <button
             onClick={addReference}
-            className="px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-all duration-200 flex items-center text-sm font-medium shadow-md hover:shadow-lg transform hover:scale-105"
+            className="px-5 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-200 flex items-center justify-center font-semibold shadow-lg hover:shadow-xl active:scale-95 min-w-[160px]"
           >
-            <Plus className="w-4 h-4 mr-1" />
-            Add Reference
+            <Plus className="w-4 h-4 mr-2" />
+            <span>Add Reference</span>
           </button>
         </div>
         {formData?.references?.map((reference: any, index: number) => (
