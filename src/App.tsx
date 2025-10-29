@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { FileText, Mail, HelpCircle, Download, FileDown } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { FileText, Mail, Download, FileDown } from 'lucide-react';
 import html2pdf from 'html2pdf.js';
 import EditableResumeForm from './components/EditableResumeForm';
 import LivePreview from './components/LivePreview';
@@ -38,9 +38,9 @@ function App() {
     profession: ''
   });
 
-  const [selectedTemplate, setSelectedTemplate] = useState('modern-executive');
+  const [selectedTemplate, setSelectedTemplate] = useState('executive');
   const [templateColorScheme, setTemplateColorScheme] = useState(0);
-  const [showATSChecker, setShowATSChecker] = useState(false);
+  const [] = useState(false);
   const [showCoverLetterBuilder, setShowCoverLetterBuilder] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showHelpPanel, setShowHelpPanel] = useState(false);
@@ -145,7 +145,11 @@ function App() {
     };
 
     try {
-      await html2pdf().set(opt).from(element).save();
+      await html2pdf().set({
+        ...opt,
+        image: { type: 'jpeg' as 'jpeg', quality: 0.98 },
+        jsPDF: { ...opt.jsPDF, orientation: 'portrait' as 'portrait' }
+      }).from(element).save();
     } catch (error) {
       console.error('Error generating PDF:', error);
       alert('Unable to generate PDF. Please try again.');
@@ -325,9 +329,10 @@ function App() {
       />
 
       <OnboardingTour
-        isVisible={showOnboarding}
-        onClose={() => setShowOnboarding(false)}
-      />
+        isOpen={showOnboarding}
+        onClose={() => setShowOnboarding(false)} onGetStarted={function (): void {
+          throw new Error('Function not implemented.');
+        } }      />
 
       <HelpPanel
         isOpen={showHelpPanel}

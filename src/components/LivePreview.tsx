@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, Mail, Phone, MapPin, Briefcase, GraduationCap, Award, Star, ExternalLink, Globe, Linkedin, Github, Trophy, CheckCircle, Code, Users, Wrench, Languages, FileText, Heart, Info } from 'lucide-react';
+import { User, Mail, Phone, MapPin, Briefcase, GraduationCap, Award, Star, ExternalLink, Globe, Linkedin, Github, Trophy, CheckCircle, Code, Users, Wrench, Languages, FileText, Heart } from 'lucide-react';
 
 interface SkillCategory {
   category: 'Technical' | 'Soft Skills' | 'Tools';
@@ -427,9 +427,9 @@ const LivePreview: React.FC<LivePreviewProps> = ({ resumeData, template, templat
     const currentScheme = colorSchemes[templateColorScheme] || colorSchemes[0];
 
     return (
-      <div className="resume-preview-content flex gap-0 bg-white transform transition-all duration-300">
+      <div className="resume-preview-content flex flex-col sm:flex-row gap-0 bg-white transform transition-all duration-300 min-w-[320px]">
         {/* Main Content Area - LEFT SIDE */}
-        <div className="flex-1 p-8 bg-white">
+        <div className="flex-1 p-4 sm:p-6 lg:p-8 bg-white">
           {/* Header */}
           <div className="mb-6">
             <h1 className={`text-4xl font-bold ${currentScheme.header} mb-2`}>
@@ -486,7 +486,7 @@ const LivePreview: React.FC<LivePreviewProps> = ({ resumeData, template, templat
         </div>
 
         {/* Right Sidebar with Contact & Skills */}
-        <div className={`w-80 bg-gradient-to-br ${currentScheme.bgGradient} p-6 flex-shrink-0`}>
+        <div className={`w-full sm:w-80 bg-gradient-to-br ${currentScheme.bgGradient} p-4 sm:p-6 flex-shrink-0`}>
           {/* Contact Info Box */}
           <div className={`bg-gradient-to-br ${currentScheme.bgGradient} rounded-lg p-4 mb-6 border-2 ${currentScheme.border.replace('border-l-4', 'border')}`}>
             <h3 className={`font-bold ${currentScheme.header} mb-3 text-sm uppercase tracking-wide`}>CONTACT</h3>
@@ -678,25 +678,28 @@ const LivePreview: React.FC<LivePreviewProps> = ({ resumeData, template, templat
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-4 h-full overflow-auto">
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="text-lg font-semibold text-gray-900">Live Preview</h3>
-        <div className="flex items-center space-x-4">
+    <div className="bg-white rounded-xl shadow-lg p-3 sm:p-4 h-full overflow-auto">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 gap-2">
+        <h3 className="text-base sm:text-lg font-semibold text-gray-900">Live Preview</h3>
+        <div className="flex items-center gap-3 sm:gap-4 flex-wrap">
           <div className="flex items-center space-x-2">
             <div className={`w-3 h-3 rounded-full ${atsScore >= 80 ? 'bg-green-500' : atsScore >= 60 ? 'bg-yellow-500' : 'bg-red-500'}`}></div>
-            <span className="text-sm text-gray-600">ATS: {atsScore}%</span>
+            <span className="text-xs sm:text-sm text-gray-600">ATS: {atsScore}%</span>
           </div>
           <div className="flex items-center space-x-2">
-            <Star className="w-4 h-4 text-yellow-500" />
-            <span className="text-sm text-gray-600">Health: {healthScore}%</span>
+            <Star className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-500" />
+            <span className="text-xs sm:text-sm text-gray-600">Health: {healthScore}%</span>
           </div>
         </div>
       </div>
 
+      <div className="w-full overflow-x-auto">
       {template === 'creative-designer' ? (
-        renderCreativeDesignerTemplate()
+        <div className="min-w-[320px]">
+          {renderCreativeDesignerTemplate()}
+        </div>
       ) : (
-        <div className={`resume-preview-content p-6 sm:p-8 ${getTemplateStyles()} transform transition-all duration-300`}>
+        <div className={`resume-preview-content p-4 sm:p-6 lg:p-8 ${getTemplateStyles()} transform transition-all duration-300 min-w-[320px]`}>
         {/* Header with Photo */}
         <div className={`pb-5 mb-5 ${template === 'executive' ? 'border-b border-gray-700' : 'border-b border-gray-300'}`}>
           <div className="flex items-start gap-4 sm:gap-6">
@@ -1074,6 +1077,7 @@ const LivePreview: React.FC<LivePreviewProps> = ({ resumeData, template, templat
         )}
         </div>
       )}
+      </div>
     </div>
   );
 };
