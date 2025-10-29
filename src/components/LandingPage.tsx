@@ -129,7 +129,7 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
       </div>
 
       {/* Navigation Bar */}
-      <nav className="fixed top-0 left-0 right-0 bg-gray-900/80 backdrop-blur-xl border-b border-gray-800/50 z-50 shadow-2xl transition-all duration-300">
+      <nav className="fixed top-0 left-0 right-0 bg-gray-900/80 backdrop-blur-0 sm:backdrop-blur-xl border-b border-gray-800/50 z-50 shadow-md sm:shadow-2xl transition-all duration-300">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-14 sm:h-16">
             <div className="flex items-center gap-1.5 sm:gap-2">
@@ -211,7 +211,7 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-20 sm:pt-24 lg:pt-32 pb-12 sm:pb-16 lg:pb-20 px-3 sm:px-4 lg:px-6 relative">
+      <section className="pt-20 sm:pt-24 lg:pt-32 pb-12 sm:pb-16 lg:pb-20 px-3 sm:px-4 lg:px-6 relative" style={{ contentVisibility: 'auto', containIntrinsicSize: '600px' }}>
         <div className="max-w-6xl mx-auto text-center relative z-10">
           <div className="inline-block mb-6">
             <div className="flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-full backdrop-blur-sm">
@@ -276,7 +276,7 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
       </section>
 
       {/* How It Works Section */}
-      <section id="features" className="py-12 sm:py-16 lg:py-20 bg-gray-900/30 backdrop-blur-sm relative z-10">
+      <section id="features" className="py-12 sm:py-16 lg:py-20 bg-gray-900/30 backdrop-blur-0 sm:backdrop-blur-sm relative z-10" style={{ contentVisibility: 'auto', containIntrinsicSize: '800px' }}>
         <div className="max-w-6xl mx-auto px-3 sm:px-4 lg:px-6">
           <div className="text-center mb-8 sm:mb-12 lg:mb-16">
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 sm:mb-4 px-2" style={{fontFamily: 'Playfair Display, Georgia, serif'}}>
@@ -349,7 +349,7 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
       </section>
 
       {/* Samples Section */}
-      <section id="samples" className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-gray-800/50 to-slate-800/50 backdrop-blur-sm relative z-10">
+      <section id="samples" className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-gray-800/50 to-slate-800/50 backdrop-blur-0 sm:backdrop-blur-sm relative z-10" style={{ contentVisibility: 'auto', containIntrinsicSize: '900px' }}>
         <div className="max-w-6xl mx-auto px-3 sm:px-4 lg:px-6">
           <div className="text-center mb-10 sm:mb-12 lg:mb-16">
             <div className="inline-block mb-4">
@@ -419,7 +419,7 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
       </section>
 
       {/* FAQ Section */}
-      <section id="faq" className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-gray-800 to-slate-800">
+      <section id="faq" className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-gray-800 to-slate-800" style={{ contentVisibility: 'auto', containIntrinsicSize: '700px' }}>
         <div className="max-w-4xl mx-auto px-3 sm:px-4 lg:px-6">
           <h2 className="text-4xl md:text-5xl font-bold text-center text-white mb-6">
             Frequently Asked Questions
@@ -484,7 +484,7 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
       </section>
 
       {/* Footer */}
-      <footer id="contact" className="bg-black text-white py-10 sm:py-12 lg:py-16">
+      <footer id="contact" className="bg-black text-white py-10 sm:py-12 lg:py-16" style={{ contentVisibility: 'auto', containIntrinsicSize: '800px' }}>
         <div className="max-w-6xl mx-auto px-3 sm:px-4 lg:px-6">
           <div className="text-center mb-8 sm:mb-10 lg:mb-12">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 px-2">
@@ -571,7 +571,7 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
       </footer>
 
       {/* Sticky Mobile CTA */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-gradient-to-r from-blue-600 to-cyan-600 px-3 py-3 shadow-2xl z-50 border-t border-blue-500/50 backdrop-blur-sm">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-gradient-to-r from-blue-600 to-cyan-600 px-3 py-3 shadow-lg sm:shadow-2xl z-50 border-t border-blue-500/50 backdrop-blur-0 sm:backdrop-blur-sm">
         <button
           onClick={() => onGetStarted?.()}
           className="w-full py-3 bg-white text-blue-600 rounded-lg font-bold text-base hover:bg-blue-50 transition-all flex items-center justify-center gap-2 shadow-lg active:scale-95"
