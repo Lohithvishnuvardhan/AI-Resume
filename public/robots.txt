@@ -1,0 +1,7 @@
+# robots.txt for ResumeAI Pro
+User-agent: *
+Allow: /
+Disallow: /clear-storage.html
+
+# Sitemap
+Sitemap: https://resumeaipro.lify.app/sitemap.xml
