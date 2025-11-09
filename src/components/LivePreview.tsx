@@ -72,6 +72,7 @@ interface ResumeData {
   references?: Reference[];
   socialLinks?: SocialLinks;
   profession?: string;
+  rawText?: string;
 }
 
 interface LivePreviewProps {
@@ -80,9 +81,11 @@ interface LivePreviewProps {
   templateColorScheme?: number;
   atsScore: number;
   healthScore: number;
+  exactMode?: boolean;
+  onToggleExactMode?: () => void;
 }
 
-const LivePreview: React.FC<LivePreviewProps> = ({ resumeData, template, templateColorScheme = 0, atsScore, healthScore }) => {
+const LivePreview: React.FC<LivePreviewProps> = ({ resumeData, template, templateColorScheme = 0, atsScore, healthScore, exactMode = false, onToggleExactMode }) => {
   const [isVisible, setIsVisible] = useState(true);
   
   useEffect(() => {
@@ -326,23 +329,42 @@ const LivePreview: React.FC<LivePreviewProps> = ({ resumeData, template, templat
   };
 
   const getTemplateStyles = () => {
-    // All templates now use white background with black text
-    return 'bg-white';
-  };
-
-  const getTextStyles = () => {
-    // Default to white background, black text with accent colors
     const colorSchemes = getTemplateColorSchemes(template);
     const currentScheme = colorSchemes[templateColorScheme] || colorSchemes[0];
     
-    // Return white background with black text, keeping accent colors for titles
-    return {
-      header: 'text-gray-900', // Black for all headings
-      accent: currentScheme.accent.replace('text-', 'text-').replace('gray-700', 'gray-900').replace('blue-700', 'blue-600').replace('cyan-700', 'cyan-600').replace('teal-700', 'teal-600'), // Keep accent color for titles
-      skills: currentScheme.skills, // Keep colored skill tags
-      bodyText: 'text-gray-900', // Black for body text
-      border: currentScheme.border // Keep border colors
-    };
+    // For resume templates, use white background for printing compatibility
+    // But apply template accent colors for headers, borders, and skill badges
+    return `bg-white`;
+  };
+
+  const getTextStyles = () => {
+    const colorSchemes = getTemplateColorSchemes(template);
+    const currentScheme = colorSchemes[templateColorScheme] || colorSchemes[0];
+    
+    // Apply template-specific styling while keeping white background for printing
+    if (template === 'executive') {
+      // Executive template uses dark background with light text
+      return {
+        header: currentScheme.header,
+        accent: currentScheme.accent,
+        skills: currentScheme.skills,
+        bodyText: currentScheme.bodyText,
+        border: currentScheme.border,
+        containerBg: `bg-gradient-to-br ${currentScheme.bgGradient}`
+      };
+    } else {
+      // Other templates: use template accent colors for headers/titles, but dark text for body
+      // Extract the color from accent (e.g., "text-blue-700" -> keep for titles)
+      // But use dark gray/black for body text for readability
+      return {
+        header: currentScheme.header.includes('white') || currentScheme.header.includes('gray-200') ? 'text-gray-900' : currentScheme.header,
+        accent: currentScheme.accent, // Use template accent color for titles and accents
+        skills: currentScheme.skills, // Use template skill badge colors
+        bodyText: 'text-gray-900', // Always use dark text for body for readability
+        border: currentScheme.border, // Use template border color
+        containerBg: 'bg-white' // White background for printing
+      };
+    }
   };
 
   const textStyles = getTextStyles();
@@ -411,9 +433,53 @@ const LivePreview: React.FC<LivePreviewProps> = ({ resumeData, template, templat
     );
   };
 
+  // Exact Mode: render raw text under original headings with ATS scores
+  const parseRawSections = (raw?: string) => {
+    if (!raw) return [] as Array<{ heading: string; content: string }>;
+    const lines = raw.split(/\r?\n/).map(l => l.replace(/\s+$/,'')); // preserve leading spaces, strip only trailing
+    const sections: Array<{ heading: string; content: string }> = [];
+    // Match heading at line start, allow optional colon and allow extra content on the same line after multiple spaces
+    const headingStart = /^(\s*)(Professional\s+Summary|Summary|Education|Projects?|Skills?|Languages?|Achievements?|Awards?)(?:\s*:)?(\s*)(.*)$/i;
+    let current: { heading: string; content: string } | null = null;
+    lines.forEach(line => {
+      const m = line.match(headingStart);
+      if (m) {
+        const heading = m[2];
+        const inlineContent = m[4] || '';
+        if (current) sections.push(current);
+        current = { heading, content: inlineContent ? inlineContent : '' };
+      } else if (current) {
+        current.content += (current.content ? '\n' : '') + line;
+      }
+    });
+    if (current) sections.push(current);
+    return sections;
+  };
+
+  const scoreExactSection = (name: string, content: string) => {
+    const len = content.trim().length;
+    const wordCount = content.split(/\s+/).filter(Boolean).length;
+    switch (true) {
+      case /summary/i.test(name):
+        return Math.max(70, Math.min(98, Math.round(wordCount / 2)));
+      case /education/i.test(name):
+        return len > 30 ? 95 : 80;
+      case /project/i.test(name):
+        return len > 50 ? 92 : 78;
+      case /skill/i.test(name):
+        return Math.min(96, 70 + Math.min(20, (content.match(/[,•\n]/g) || []).length * 3));
+      case /language/i.test(name):
+        return content ? 90 : 60;
+      case /achievement|award/i.test(name):
+        return len > 20 ? 88 : 72;
+      default:
+        return 85;
+    }
+  };
+
   const SectionDivider = () => {
     return (
-      <div className={`my-5 border-t border-gray-200`}></div>
+      <div className={`my-5 border-t ${template === 'executive' ? 'border-gray-600' : 'border-gray-200'}`}></div>
     );
   };
 
@@ -489,7 +555,8 @@ const LivePreview: React.FC<LivePreviewProps> = ({ resumeData, template, templat
               {resumeData.personalInfo.email && (
                 <a
                   href={`mailto:${resumeData.personalInfo.email}`}
-                  className="flex items-start gap-2 hover:opacity-70 transition-opacity"
+                  className="flex items-start gap-2 hover:opacity-70 transition-opacity underline"
+                  style={{ color: '#2563eb', textDecoration: 'underline' }}
                 >
                   <Mail className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
                   <span className="break-all text-gray-900">{resumeData.personalInfo.email}</span>
@@ -497,8 +564,9 @@ const LivePreview: React.FC<LivePreviewProps> = ({ resumeData, template, templat
               )}
               {resumeData.personalInfo.phone && (
                 <a
-                  href={`tel:${resumeData.personalInfo.phone}`}
-                  className="flex items-center gap-2 hover:opacity-70 transition-opacity"
+                  href={`tel:${resumeData.personalInfo.phone.replace(/\s/g, '')}`}
+                  className="flex items-center gap-2 hover:opacity-70 transition-opacity underline"
+                  style={{ color: '#2563eb', textDecoration: 'underline' }}
                 >
                   <Phone className="w-3.5 h-3.5 flex-shrink-0" />
                   <span className="text-gray-900">{resumeData.personalInfo.phone}</span>
@@ -512,10 +580,11 @@ const LivePreview: React.FC<LivePreviewProps> = ({ resumeData, template, templat
               )}
               {resumeData.socialLinks?.linkedin && (
                 <a
-                  href={resumeData.socialLinks.linkedin}
+                  href={resumeData.socialLinks.linkedin.startsWith('http') ? resumeData.socialLinks.linkedin : `https://${resumeData.socialLinks.linkedin}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 hover:opacity-70 transition-opacity"
+                  className="flex items-center gap-2 hover:opacity-70 transition-opacity underline"
+                  style={{ color: '#2563eb', textDecoration: 'underline' }}
                 >
                   <Linkedin className="w-3.5 h-3.5 flex-shrink-0" />
                   <span className="text-gray-900 text-xs break-all">{resumeData.socialLinks.linkedin.replace('https://', '').replace('http://', '')}</span>
@@ -523,10 +592,11 @@ const LivePreview: React.FC<LivePreviewProps> = ({ resumeData, template, templat
               )}
               {resumeData.socialLinks?.github && (
                 <a
-                  href={resumeData.socialLinks.github}
+                  href={resumeData.socialLinks.github.startsWith('http') ? resumeData.socialLinks.github : `https://${resumeData.socialLinks.github}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 hover:opacity-70 transition-opacity"
+                  className="flex items-center gap-2 hover:opacity-70 transition-opacity underline"
+                  style={{ color: '#2563eb', textDecoration: 'underline' }}
                 >
                   <Github className="w-3.5 h-3.5 flex-shrink-0" />
                   <span className="text-gray-900 text-xs break-all">{resumeData.socialLinks.github.replace('https://', '').replace('http://', '')}</span>
@@ -534,10 +604,11 @@ const LivePreview: React.FC<LivePreviewProps> = ({ resumeData, template, templat
               )}
               {resumeData.socialLinks?.website && (
                 <a
-                  href={resumeData.socialLinks.website}
+                  href={resumeData.socialLinks.website.startsWith('http') ? resumeData.socialLinks.website : `https://${resumeData.socialLinks.website}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 hover:opacity-70 transition-opacity"
+                  className="flex items-center gap-2 hover:opacity-70 transition-opacity underline"
+                  style={{ color: '#2563eb', textDecoration: 'underline' }}
                 >
                   <Globe className="w-3.5 h-3.5 flex-shrink-0" />
                   <span className="text-gray-700 text-xs break-all">{resumeData.socialLinks.website.replace('https://', '').replace('http://', '')}</span>
@@ -685,18 +756,59 @@ const LivePreview: React.FC<LivePreviewProps> = ({ resumeData, template, templat
             <Star className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-500" />
             <span className="text-xs sm:text-sm text-gray-600">Health: {healthScore}%</span>
           </div>
+          {onToggleExactMode && (
+            <button
+              onClick={onToggleExactMode}
+              className={`px-3 py-1.5 text-xs sm:text-sm rounded-lg font-semibold transition-all shadow-sm ${exactMode ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-800 border border-gray-300'}`}
+              title="Render uploaded resume exactly as-is"
+            >
+              {exactMode ? 'Exact Mode: On' : 'Exact Mode: Off'}
+            </button>
+          )}
         </div>
       </div>
 
       <div className="w-full overflow-x-auto">
-      {template === 'creative-designer' ? (
+      {exactMode && resumeData.rawText ? (
+        <div className="resume-preview-content p-6 sm:p-8 lg:p-10 bg-white transform transition-all duration-300 min-w-[320px] shadow-lg rounded-lg" style={{margin: '0 auto', maxWidth: '210mm'}}>
+          {parseRawSections(resumeData.rawText).map((sec, idx) => (
+            <div key={idx} className="mb-6">
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-lg font-bold text-gray-900">{sec.heading}</h2>
+                <ATSBadge section={sec.heading.toLowerCase()} score={scoreExactSection(sec.heading, sec.content)} />
+              </div>
+              <div className="whitespace-pre-wrap text-gray-900 text-sm bg-gray-50 p-4 rounded-lg border border-gray-200">
+                {sec.content}
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : template === 'creative-designer' ? (
         <div className="min-w-[320px]">
           {renderCreativeDesignerTemplate()}
         </div>
       ) : (
-        <div className={`resume-preview-content p-6 sm:p-8 lg:p-10 bg-white transform transition-all duration-300 min-w-[320px] shadow-lg rounded-lg`} style={{margin: '0 auto', maxWidth: '210mm'}}>
+        <div className={`resume-preview-content p-6 sm:p-8 lg:p-10 ${textStyles.containerBg} transform transition-all duration-300 min-w-[320px] shadow-lg rounded-lg`} style={{margin: '0 auto', maxWidth: '210mm', borderLeft: template !== 'executive' && textStyles.border.includes('border-l-4') ? '4px solid' : 'none', borderLeftColor: template !== 'executive' && textStyles.border.includes('blue') ? '#3b82f6' : template !== 'executive' && textStyles.border.includes('cyan') ? '#06b6d4' : template !== 'executive' && textStyles.border.includes('teal') ? '#14b8a6' : 'transparent'}}>
+          <style>{`
+            .resume-preview-content a {
+              color: #2563eb !important;
+              text-decoration: underline !important;
+            }
+            .resume-preview-content a[href^="mailto:"] {
+              color: #2563eb !important;
+              text-decoration: underline !important;
+            }
+            .resume-preview-content a[href^="tel:"] {
+              color: #2563eb !important;
+              text-decoration: underline !important;
+            }
+            .resume-preview-content a[href^="http"] {
+              color: #2563eb !important;
+              text-decoration: underline !important;
+            }
+          `}</style>
         {/* Header with Photo */}
-        <div className={`pb-5 mb-5 border-b border-gray-300`}>
+        <div className={`pb-5 mb-5 ${template === 'executive' ? 'border-b border-gray-600' : 'border-b-2'}`} style={template !== 'executive' ? { borderBottomColor: textStyles.border.includes('blue') ? '#3b82f6' : textStyles.border.includes('cyan') ? '#06b6d4' : textStyles.border.includes('teal') ? '#14b8a6' : textStyles.border.includes('indigo') ? '#6366f1' : '#e5e7eb', borderBottomWidth: '2px' } : {}}>
           <div className="flex items-start gap-4 sm:gap-6">
             {resumeData.personalInfo.photo && (
               <img
@@ -706,17 +818,18 @@ const LivePreview: React.FC<LivePreviewProps> = ({ resumeData, template, templat
               />
             )}
             <div className="flex-1 min-w-0">
-              <h1 className={`text-2xl sm:text-3xl font-bold text-gray-900 mb-1 break-words`}>
+              <h1 className={`text-2xl sm:text-3xl font-bold ${textStyles.header} mb-1 break-words`}>
                 {resumeData.personalInfo.fullName || 'Your Name'}
               </h1>
               <p className={`text-base sm:text-lg ${textStyles.accent} mb-3 font-medium`}>
                 {resumeData.personalInfo.title || 'Professional Title'}
               </p>
-              <div className={`flex flex-wrap gap-2 sm:gap-3 text-xs mb-2 text-gray-600`}>
+              <div className={`flex flex-wrap gap-2 sm:gap-3 text-xs mb-2 ${template === 'executive' ? 'text-gray-300' : 'text-gray-600'}`}>
                 {resumeData.personalInfo.email && (
                   <a
                     href={`mailto:${resumeData.personalInfo.email}`}
-                    className={`flex items-center transition-colors hover:text-blue-600 text-gray-600`}
+                    className={`flex items-center transition-colors hover:text-blue-600 ${template === 'executive' ? 'text-gray-300' : 'text-gray-600'} underline`}
+                    style={{ color: template === 'executive' ? '#d1d5db' : '#2563eb', textDecoration: 'underline' }}
                   >
                     <Mail className="w-3.5 h-3.5 mr-1 flex-shrink-0" />
                     <span className="break-all">{resumeData.personalInfo.email}</span>
@@ -724,20 +837,62 @@ const LivePreview: React.FC<LivePreviewProps> = ({ resumeData, template, templat
                 )}
                 {resumeData.personalInfo.phone && (
                   <a
-                    href={`tel:${resumeData.personalInfo.phone}`}
-                    className={`flex items-center transition-colors hover:text-blue-600 text-gray-600`}
+                    href={`tel:${resumeData.personalInfo.phone.replace(/\s/g, '')}`}
+                    className={`flex items-center transition-colors hover:text-blue-600 ${template === 'executive' ? 'text-gray-300' : 'text-gray-600'} underline`}
+                    style={{ color: template === 'executive' ? '#d1d5db' : '#2563eb', textDecoration: 'underline' }}
                   >
                     <Phone className="w-3.5 h-3.5 mr-1 flex-shrink-0" />
                     {resumeData.personalInfo.phone}
                   </a>
                 )}
                 {resumeData.personalInfo.location && (
-                  <div className="flex items-center">
+                  <div className={`flex items-center ${template === 'executive' ? 'text-gray-300' : 'text-gray-600'}`}>
                     <MapPin className="w-3.5 h-3.5 mr-1 flex-shrink-0" />
                     {resumeData.personalInfo.location}
                   </div>
                 )}
               </div>
+              {/* Social Links in Header */}
+              {(resumeData.socialLinks?.linkedin || resumeData.socialLinks?.github || resumeData.socialLinks?.website) && (
+                <div className="flex flex-wrap gap-3 sm:gap-4 text-xs mt-2">
+                  {resumeData.socialLinks?.linkedin && (
+                    <a
+                      href={resumeData.socialLinks.linkedin.startsWith('http') ? resumeData.socialLinks.linkedin : `https://${resumeData.socialLinks.linkedin}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`flex items-center ${template === 'executive' ? 'text-gray-300' : 'text-gray-600'} underline`}
+                      style={{ color: template === 'executive' ? '#d1d5db' : '#2563eb', textDecoration: 'underline' }}
+                    >
+                      <Linkedin className="w-3.5 h-3.5 mr-1 flex-shrink-0" />
+                      <span>LinkedIn</span>
+                    </a>
+                  )}
+                  {resumeData.socialLinks?.github && (
+                    <a
+                      href={resumeData.socialLinks.github.startsWith('http') ? resumeData.socialLinks.github : `https://${resumeData.socialLinks.github}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`flex items-center ${template === 'executive' ? 'text-gray-300' : 'text-gray-600'} underline`}
+                      style={{ color: template === 'executive' ? '#d1d5db' : '#2563eb', textDecoration: 'underline' }}
+                    >
+                      <Github className="w-3.5 h-3.5 mr-1 flex-shrink-0" />
+                      <span>GitHub</span>
+                    </a>
+                  )}
+                  {resumeData.socialLinks?.website && (
+                    <a
+                      href={resumeData.socialLinks.website.startsWith('http') ? resumeData.socialLinks.website : `https://${resumeData.socialLinks.website}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`flex items-center ${template === 'executive' ? 'text-gray-300' : 'text-gray-600'} underline`}
+                      style={{ color: template === 'executive' ? '#d1d5db' : '#2563eb', textDecoration: 'underline' }}
+                    >
+                      <Globe className="w-3.5 h-3.5 mr-1 flex-shrink-0" />
+                      <span>Website</span>
+                    </a>
+                  )}
+                </div>
+              )}
               <div className="mt-2">
                 <ATSBadge section="header" score={98} />
               </div>
@@ -750,13 +905,13 @@ const LivePreview: React.FC<LivePreviewProps> = ({ resumeData, template, templat
           <>
             <div className="mb-6">
               <div className="flex items-center justify-between mb-3">
-                <h2 className={`text-lg font-bold text-gray-900 flex items-center`}>
+                <h2 className={`text-lg font-bold ${textStyles.header} flex items-center`}>
                   <User className="w-5 h-5 mr-2" />
                   Professional Summary
                 </h2>
                 <ATSBadge section="summary" score={88} />
               </div>
-              <p className={`text-gray-900 leading-relaxed`}>{resumeData.personalInfo.summary}</p>
+              <p className={`${textStyles.bodyText} leading-relaxed`}>{resumeData.personalInfo.summary}</p>
             </div>
             <SectionDivider />
           </>
@@ -767,7 +922,7 @@ const LivePreview: React.FC<LivePreviewProps> = ({ resumeData, template, templat
           <>
             <div className="mb-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className={`text-lg font-bold text-gray-900 flex items-center`}>
+                <h2 className={`text-lg font-bold ${textStyles.header} flex items-center`}>
                   <Briefcase className="w-5 h-5 mr-2" />
                   Experience
                 </h2>
@@ -776,9 +931,9 @@ const LivePreview: React.FC<LivePreviewProps> = ({ resumeData, template, templat
               <div className="space-y-4">
                 {resumeData.experience.map((exp, index) => (
                   <div key={index} className="pl-0">
-                    <h3 className={`font-bold text-base text-gray-900`}>{exp.position}</h3>
+                    <h3 className={`font-bold text-base ${textStyles.header}`}>{exp.position}</h3>
                     <p className={`${textStyles.accent} text-sm font-medium mb-2`}>{exp.company} • {exp.duration}</p>
-                    {exp.description && <p className={`text-gray-900 text-sm leading-relaxed`}>{exp.description}</p>}
+                    {exp.description && <p className={`${textStyles.bodyText} text-sm leading-relaxed`}>{exp.description}</p>}
                   </div>
                 ))}
               </div>
@@ -792,7 +947,7 @@ const LivePreview: React.FC<LivePreviewProps> = ({ resumeData, template, templat
           <>
             <div className="mb-4 sm:mb-5 lg:mb-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className={`text-lg font-bold text-gray-900 flex items-center`}>
+                <h2 className={`text-lg font-bold ${textStyles.header} flex items-center`}>
                   <Code className="w-5 h-5 mr-2" />
                   Projects
                 </h2>
@@ -800,21 +955,21 @@ const LivePreview: React.FC<LivePreviewProps> = ({ resumeData, template, templat
               </div>
               <div className="space-y-3 sm:space-y-4">
                 {resumeData.projects.map((project, index) => (
-                  <div key={index} className={`p-4 rounded-lg hover:shadow-md transition-shadow bg-gray-50`}>
+                  <div key={index} className={`p-4 rounded-lg hover:shadow-md transition-shadow ${template === 'executive' ? 'bg-slate-700/50' : 'bg-gray-50'}`}>
                     <div className="flex items-start justify-between">
-                      <h3 className={`font-bold text-gray-900`}>{project.title}</h3>
+                      <h3 className={`font-bold ${textStyles.header}`}>{project.title}</h3>
                       {project.url && (
                         <a
                           href={project.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-blue-600 hover:text-blue-800 transition-colors"
+                          className={`${textStyles.accent} hover:opacity-80 transition-colors`}
                         >
                           <ExternalLink className="w-4 h-4" />
                         </a>
                       )}
                     </div>
-                    <p className={`text-gray-900 mt-2 text-sm leading-relaxed`}>{project.description}</p>
+                    <p className={`${textStyles.bodyText} mt-2 text-sm leading-relaxed`}>{project.description}</p>
                   </div>
                 ))}
               </div>
@@ -828,7 +983,7 @@ const LivePreview: React.FC<LivePreviewProps> = ({ resumeData, template, templat
           <>
             <div className="mb-4 sm:mb-5 lg:mb-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className={`text-lg font-bold text-gray-900 flex items-center`}>
+                <h2 className={`text-lg font-bold ${textStyles.header} flex items-center`}>
                   <GraduationCap className="w-5 h-5 mr-2" />
                   Education
                 </h2>
@@ -836,8 +991,8 @@ const LivePreview: React.FC<LivePreviewProps> = ({ resumeData, template, templat
               </div>
               <div className="space-y-2 sm:space-y-3">
                 {resumeData.education.map((edu, index) => (
-                  <div key={index} className={`p-3 rounded-lg bg-gray-50`}>
-                    <h3 className={`font-bold text-gray-900`}>{edu.degree}</h3>
+                  <div key={index} className={`p-3 rounded-lg ${template === 'executive' ? 'bg-slate-700/50' : 'bg-gray-50'}`}>
+                    <h3 className={`font-bold ${textStyles.header}`}>{edu.degree}</h3>
                     <p className={`${textStyles.accent}`}>{edu.school} • {edu.year}</p>
                   </div>
                 ))}
@@ -852,7 +1007,7 @@ const LivePreview: React.FC<LivePreviewProps> = ({ resumeData, template, templat
           <>
             <div className="mb-4 sm:mb-5 lg:mb-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className={`text-lg font-bold text-gray-900 flex items-center`}>
+                <h2 className={`text-lg font-bold ${textStyles.header} flex items-center`}>
                   <Award className="w-5 h-5 mr-2" />
                   Certifications
                 </h2>
@@ -863,8 +1018,8 @@ const LivePreview: React.FC<LivePreviewProps> = ({ resumeData, template, templat
                   <div key={index} className="flex items-start">
                     <CheckCircle className={`w-5 h-5 mr-2 mt-0.5 ${textStyles.accent}`} />
                     <div>
-                      <h3 className={`font-semibold text-gray-900`}>{cert.name}</h3>
-                      <p className={`text-sm text-gray-600`}>{cert.issuer} • {cert.year}</p>
+                      <h3 className={`font-semibold ${textStyles.header}`}>{cert.name}</h3>
+                      <p className={`text-sm ${textStyles.accent}`}>{cert.issuer} • {cert.year}</p>
                     </div>
                   </div>
                 ))}
@@ -879,7 +1034,7 @@ const LivePreview: React.FC<LivePreviewProps> = ({ resumeData, template, templat
           <>
             <div className="mb-4 sm:mb-5 lg:mb-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className={`text-lg font-bold text-gray-900 flex items-center`}>
+                <h2 className={`text-lg font-bold ${textStyles.header} flex items-center`}>
                   <Award className="w-5 h-5 mr-2" />
                   Skills
                 </h2>
@@ -920,7 +1075,7 @@ const LivePreview: React.FC<LivePreviewProps> = ({ resumeData, template, templat
                   {resumeData.skills.map((skill, index) => (
                     <span
                       key={index}
-                      className={`px-3 py-1.5 ${textStyles.skills} rounded-full text-sm font-medium`}
+                      className={`px-3 py-1.5 rounded-full text-sm font-medium ${textStyles.skills} border ${template === 'executive' ? 'border-slate-600' : 'border-gray-300'}`}
                     >
                       {skill}
                     </span>
@@ -996,7 +1151,7 @@ const LivePreview: React.FC<LivePreviewProps> = ({ resumeData, template, templat
                 {resumeData.hobbies.map((hobby, index) => (
                   <span
                     key={index}
-                    className={`px-3 py-1.5 ${textStyles.skills} rounded-full text-sm`}
+                    className={`px-3 py-1.5 rounded-full text-sm bg-gray-100 text-gray-800 border border-gray-300`}
                   >
                     {hobby}
                   </span>
@@ -1030,16 +1185,35 @@ const LivePreview: React.FC<LivePreviewProps> = ({ resumeData, template, templat
           </>
         )}
 
+        {/* Raw Uploaded Resume (fallback) */}
+        {(!resumeData.experience.length && !resumeData.education.length && !resumeData.skills.length && !resumeData.projects?.length && resumeData.rawText) && (
+          <>
+            <SectionDivider />
+            <div className="mb-4 sm:mb-5 lg:mb-6">
+              <div className="flex items-center mb-4">
+                <h2 className={`text-lg font-bold text-gray-900 flex items-center`}>
+                  <FileText className="w-5 h-5 mr-2" />
+                  Uploaded Resume
+                </h2>
+              </div>
+              <div className="whitespace-pre-wrap text-sm text-gray-900 bg-gray-50 rounded-lg p-4 border border-gray-200">
+                {resumeData.rawText}
+              </div>
+            </div>
+          </>
+        )}
+
         {/* Footer with Social Links */}
         {resumeData.socialLinks && (Object.keys(resumeData.socialLinks).length > 0) && (
           <div className={`mt-8 pt-4 border-t-2 ${template === 'executive' ? 'border-gray-700' : 'border-gray-300'}`}>
             <div className="flex flex-wrap items-center justify-center gap-4">
               {resumeData.socialLinks.linkedin && (
                 <a
-                  href={resumeData.socialLinks.linkedin}
+                  href={resumeData.socialLinks.linkedin.startsWith('http') ? resumeData.socialLinks.linkedin : `https://${resumeData.socialLinks.linkedin}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`flex items-center ${textStyles.accent} hover:opacity-70 transition-opacity`}
+                  className={`flex items-center ${textStyles.accent} hover:opacity-70 transition-opacity underline`}
+                  style={{ color: '#2563eb', textDecoration: 'underline' }}
                 >
                   <Linkedin className="w-5 h-5 mr-2" />
                   <span className="text-sm font-medium">LinkedIn</span>
@@ -1047,10 +1221,11 @@ const LivePreview: React.FC<LivePreviewProps> = ({ resumeData, template, templat
               )}
               {resumeData.socialLinks.github && (
                 <a
-                  href={resumeData.socialLinks.github}
+                  href={resumeData.socialLinks.github.startsWith('http') ? resumeData.socialLinks.github : `https://${resumeData.socialLinks.github}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`flex items-center ${textStyles.accent} hover:opacity-70 transition-opacity`}
+                  className={`flex items-center ${textStyles.accent} hover:opacity-70 transition-opacity underline`}
+                  style={{ color: '#2563eb', textDecoration: 'underline' }}
                 >
                   <Github className="w-5 h-5 mr-2" />
                   <span className="text-sm font-medium">GitHub</span>
@@ -1058,10 +1233,11 @@ const LivePreview: React.FC<LivePreviewProps> = ({ resumeData, template, templat
               )}
               {resumeData.socialLinks.website && (
                 <a
-                  href={resumeData.socialLinks.website}
+                  href={resumeData.socialLinks.website.startsWith('http') ? resumeData.socialLinks.website : `https://${resumeData.socialLinks.website}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`flex items-center ${textStyles.accent} hover:opacity-70 transition-opacity`}
+                  className={`flex items-center ${textStyles.accent} hover:opacity-70 transition-opacity underline`}
+                  style={{ color: '#2563eb', textDecoration: 'underline' }}
                 >
                   <Globe className="w-5 h-5 mr-2" />
                   <span className="text-sm font-medium">Website</span>

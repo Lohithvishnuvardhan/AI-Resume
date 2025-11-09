@@ -142,29 +142,38 @@ const ATSChecker: React.FC<ATSCheckerProps> = ({ resumeData, score, onScoreChang
     setTimeout(() => {
       const improvedData = { ...resumeData };
 
+      // Always ensure a professional summary exists (use rawText first, then a concise template)
       if (!improvedData.personalInfo.summary) {
-        improvedData.personalInfo.summary = `Results-driven ${resumeData.profession || 'professional'} with extensive experience in delivering high-impact solutions. Proven track record of leading cross-functional teams and driving organizational success through strategic planning and innovative problem-solving.`;
+        const sourceText: string = (improvedData.rawText || '').replace(/\s+/g, ' ').trim();
+        let fromRaw = '';
+        if (sourceText.length > 60) {
+          const sentences = sourceText.split(/(?<=[.!?])\s+/).slice(0, 2).join(' ');
+          fromRaw = sentences.substring(0, 450);
+        }
+        if (fromRaw && fromRaw.length > 60) {
+          improvedData.personalInfo.summary = fromRaw;
+        } else {
+          const hintTitle = improvedData.personalInfo.title || improvedData.profession || 'Professional';
+          const topSkills = (improvedData.skills || []).slice(0, 4).join(', ');
+          improvedData.personalInfo.summary = `Results-driven ${hintTitle} with strengths in ${topSkills}. Focused on delivering measurable impact, clear communication, and ATS-friendly presentation.`.trim();
+        }
       }
 
+      // Ensure header essentials are present with editable placeholders
+      if (!improvedData.personalInfo.title) {
+        improvedData.personalInfo.title = improvedData.profession || 'Professional Title';
+      }
       if (!improvedData.personalInfo.email) {
         improvedData.personalInfo.email = 'your.email@example.com';
       }
-
       if (!improvedData.personalInfo.phone) {
-        improvedData.personalInfo.phone = '+1 (555) 123-4567';
+        improvedData.personalInfo.phone = '+91 90000 00000';
       }
 
-      if (!improvedData.experience || improvedData.experience.length === 0) {
-        improvedData.experience = [
-          {
-            company: 'Company Name',
-            position: 'Job Title',
-            startDate: '2021',
-            endDate: 'Present',
-            description: '• Led cross-functional team of 10+ members, delivering 25% increase in project efficiency\n• Implemented strategic initiatives resulting in $500K cost savings annually\n• Drove innovation through data-driven decision making and process optimization'
-          }
-        ];
-      } else {
+      // Never inject fake contact info, keep as-is if missing
+
+      // Improve existing experience bullets only; do not create new entries
+      if (improvedData.experience && improvedData.experience.length > 0) {
         improvedData.experience = improvedData.experience.map((exp: any) => {
           if (!exp.description || exp.description.length < 50) {
             return {
@@ -175,120 +184,73 @@ const ATSChecker: React.FC<ATSCheckerProps> = ({ resumeData, score, onScoreChang
           return exp;
         });
       }
-
-      const essentialSkills = ['Leadership', 'Project Management', 'Strategic Planning', 'Team Collaboration', 'Problem Solving', 'Data Analysis', 'Communication', 'Innovation'];
-      const currentSkills = improvedData.skills || [];
-      const skillsToAdd = essentialSkills.filter(skill =>
-        !currentSkills.some((s: string) => s.toLowerCase().includes(skill.toLowerCase()))
-      );
-
-      improvedData.skills = [...currentSkills, ...skillsToAdd.slice(0, Math.max(0, 8 - currentSkills.length))];
-
-      if (!improvedData.education || improvedData.education.length === 0) {
-        improvedData.education = [
+      // If user has no experience at all, provide a sensible starter entry to edit quickly
+      if (!improvedData.experience || improvedData.experience.length === 0) {
+        improvedData.experience = [
           {
-            school: 'University Name',
-            degree: 'Bachelor of Science',
-            field: 'Your Field of Study',
-            year: '2020'
+            company: 'Company Name',
+            position: 'Job Title',
+            duration: '2022 - Present',
+            description: '• Led cross-functional initiatives improving delivery speed by 25%\n• Implemented process optimizations saving 10+ hours per week\n• Collaborated with stakeholders to ship features on time'
           }
         ];
       }
+      // Light skill enrichment only if list is very small
+      const currentSkills = improvedData.skills || [];
+      if (currentSkills.length < 5) {
+        const suggestions = ['Leadership', 'Problem Solving', 'Communication', 'Team Collaboration', 'Time Management'];
+        const toAdd = suggestions.filter(s => !currentSkills.some((k: string) => k.toLowerCase() === s.toLowerCase())).slice(0, 5 - currentSkills.length);
+        improvedData.skills = [...currentSkills, ...toAdd];
+      }
 
+      // Provide starter education if none
+      if (!improvedData.education || improvedData.education.length === 0) {
+        improvedData.education = [
+          { school: 'University Name', degree: 'B.Tech / B.Sc', year: '2024' }
+        ];
+      }
+
+      // Provide starter projects if none
       if (!improvedData.projects || improvedData.projects.length === 0) {
         improvedData.projects = [
           {
-            title: 'E-commerce Platform Development',
-            description: 'Built a scalable e-commerce platform serving 50K+ users with 99.9% uptime. Implemented advanced features including real-time inventory management, payment processing, and personalized recommendations.',
+            title: 'Portfolio Website',
+            description: 'Built a responsive personal portfolio with React and Tailwind CSS; optimized for Lighthouse 95+ scores.',
             url: ''
           },
           {
-            title: 'Data Analytics Dashboard',
-            description: 'Developed comprehensive analytics dashboard processing 1M+ data points daily. Enabled stakeholders to make data-driven decisions, resulting in 30% improvement in operational efficiency.',
+            title: 'Task Manager API',
+            description: 'Designed RESTful API with Node.js and Express; implemented JWT auth and CRUD for tasks.',
             url: ''
           }
         ];
       }
 
+      // Provide starter certifications/achievements/languages if none
       if (!improvedData.certifications || improvedData.certifications.length === 0) {
         improvedData.certifications = [
-          {
-            name: 'Professional Certification',
-            issuer: 'Industry Organization',
-            year: new Date().getFullYear().toString()
-          },
-          {
-            name: 'Advanced Specialization',
-            issuer: 'Leading Institution',
-            year: (new Date().getFullYear() - 1).toString()
-          }
+          { name: 'Certification Name', issuer: 'Issuer', year: new Date().getFullYear().toString() }
         ];
       }
 
       if (!improvedData.achievements || improvedData.achievements.length === 0) {
         improvedData.achievements = [
-          {
-            title: 'Excellence Award',
-            description: 'Recognized for outstanding performance and contribution to organizational success'
-          },
-          {
-            title: 'Innovation Recognition',
-            description: 'Awarded for implementing innovative solutions that improved team productivity by 40%'
-          },
-          {
-            title: 'Leadership Excellence',
-            description: 'Honored for exceptional leadership in managing cross-functional teams and delivering complex projects'
-          }
+          { title: 'Dean\'s List', description: 'Recognized for academic excellence' }
         ];
       }
 
       if (!improvedData.languages || improvedData.languages.length === 0) {
-        improvedData.languages = [
-          {
-            name: 'English',
-            proficiency: 'Native'
-          },
-          {
-            name: 'Spanish',
-            proficiency: 'Professional'
-          }
-        ];
+        improvedData.languages = [ { name: 'English', proficiency: 'Professional' } ];
       }
 
       if (!improvedData.hobbies || improvedData.hobbies.length === 0) {
-        improvedData.hobbies = [
-          'Technology Exploration',
-          'Continuous Learning',
-          'Community Volunteering',
-          'Public Speaking'
-        ];
+        improvedData.hobbies = ['Open-source contribution', 'Reading'];
       }
 
-      if (!improvedData.references || improvedData.references.length === 0) {
-        improvedData.references = [
-          {
-            name: 'Professional Reference',
-            title: 'Senior Manager at Previous Company',
-            contact: 'Available upon request'
-          }
-        ];
-      }
-
-      if (!improvedData.socialLinks) {
-        improvedData.socialLinks = {};
-      }
-
-      if (!improvedData.socialLinks.linkedin) {
-        improvedData.socialLinks.linkedin = 'https://linkedin.com/in/yourprofile';
-      }
-
-      if (!improvedData.socialLinks.github) {
-        improvedData.socialLinks.github = 'https://github.com/yourusername';
-      }
-
-      if (!improvedData.socialLinks.website) {
-        improvedData.socialLinks.website = 'https://yourwebsite.com';
-      }
+      // Safe defaults for social links if missing
+      if (!improvedData.socialLinks) improvedData.socialLinks = {};
+      if (!improvedData.socialLinks.linkedin) improvedData.socialLinks.linkedin = 'https://linkedin.com/in/yourprofile';
+      if (!improvedData.socialLinks.github) improvedData.socialLinks.github = 'https://github.com/yourusername';
 
       onApplyImprovements(improvedData);
       setIsApplyingImprovements(false);

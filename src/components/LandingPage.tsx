@@ -525,7 +525,7 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
                       <Star className="w-4 h-4 text-yellow-400 fill-current" />
                       <Star className="w-4 h-4 text-yellow-400 fill-current" />
                     </div>
-                    <span className="text-xs text-gray-500 font-semibold">4.9/5.0</span>
+                    <span className="text-xs text-gray-500 font-semibold">9.7/10</span>
                   </div>
                 </div>
               </div>
@@ -973,7 +973,7 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
               { number: '1M+', label: 'Active Users', icon: Users },
               { number: '95%', label: 'ATS Pass Rate', icon: TrendingUp },
               { number: '50+', label: 'Templates', icon: FileText },
-              { number: '4.9/5', label: 'User Rating', icon: Star }
+              { number: '9.7/10', label: 'User Rating', icon: Star }
             ].map((stat, idx) => (
               <div key={idx} className="text-center">
                 <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-600 to-cyan-600 rounded-2xl mb-4">

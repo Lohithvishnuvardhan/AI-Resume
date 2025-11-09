@@ -38,12 +38,12 @@ function App() {
     hobbies: [],
     references: [],
     socialLinks: {},
-    profession: ''
+    profession: '',
+    rawText: ''
   });
 
   const [selectedTemplate, setSelectedTemplate] = useState('executive');
   const [templateColorScheme, setTemplateColorScheme] = useState(0);
-  const [] = useState(false);
   const [showCoverLetterBuilder, setShowCoverLetterBuilder] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showHelpPanel, setShowHelpPanel] = useState(false);
@@ -52,6 +52,7 @@ function App() {
   const [healthScore, setHealthScore] = useState(0);
   const [showConfetti, setShowConfetti] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [exactMode, setExactMode] = useState(false);
 
   useEffect(() => {
     // Always show landing page on first load
@@ -96,7 +97,8 @@ function App() {
         hobbies: [],
         references: [],
         socialLinks: {},
-        profession: ''
+        profession: '',
+        rawText: ''
       };
 
       const mergedData = {
@@ -142,20 +144,66 @@ function App() {
     setIsDownloading(true);
     element.classList.add('downloading');
 
+    // Clone the element to avoid modifying the original
+    const clonedElement = element.cloneNode(true) as HTMLElement;
+    
+    // Ensure all links have proper styling and are visible
+    const links = clonedElement.querySelectorAll('a');
+    links.forEach(link => {
+      link.style.color = '#2563eb';
+      link.style.textDecoration = 'underline';
+      // Ensure href is properly formatted
+      if (link.href) {
+        if (link.href.startsWith('mailto:') || link.href.startsWith('tel:')) {
+          // mailto and tel links are already correct
+        } else if (!link.href.startsWith('http://') && !link.href.startsWith('https://')) {
+          // Ensure web links have proper protocol
+          if (link.getAttribute('href')) {
+            const href = link.getAttribute('href') || '';
+            if (!href.startsWith('http://') && !href.startsWith('https://') && !href.startsWith('mailto:') && !href.startsWith('tel:')) {
+              link.setAttribute('href', `https://${href}`);
+            }
+          }
+        }
+      }
+    });
+
     const opt = {
       margin: 0.5,
       filename: `${resumeData.personalInfo.fullName || 'Resume'}.pdf`,
       image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true },
-      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+      html2canvas: { 
+        scale: 2, 
+        useCORS: true,
+        logging: false,
+        letterRendering: true
+      },
+      jsPDF: { 
+        unit: 'in', 
+        format: 'letter', 
+        orientation: 'portrait',
+        compress: true
+      },
+      pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
     };
 
     try {
+      // Create a temporary container for the cloned element
+      const tempContainer = document.createElement('div');
+      tempContainer.style.position = 'absolute';
+      tempContainer.style.left = '-9999px';
+      tempContainer.style.top = '0';
+      tempContainer.appendChild(clonedElement);
+      document.body.appendChild(tempContainer);
+
       await html2pdf().set({
         ...opt,
         image: { type: 'jpeg' as 'jpeg', quality: 0.98 },
         jsPDF: { ...opt.jsPDF, orientation: 'portrait' as 'portrait' }
-      }).from(element).save();
+      }).from(clonedElement).save();
+      
+      // Clean up
+      document.body.removeChild(tempContainer);
       
       showToast('PDF downloaded successfully!', 'success');
       setShowConfetti(true);
@@ -182,6 +230,20 @@ function App() {
     const atsBadges = clonedElement.querySelectorAll('.ats-badge');
     atsBadges.forEach(badge => badge.remove());
 
+    // Ensure all links are properly formatted for Word document
+    const links = clonedElement.querySelectorAll('a');
+    links.forEach(link => {
+      link.style.color = '#2563eb';
+      link.style.textDecoration = 'underline';
+      // Ensure href is properly formatted
+      const href = link.getAttribute('href');
+      if (href) {
+        if (!href.startsWith('http://') && !href.startsWith('https://') && !href.startsWith('mailto:') && !href.startsWith('tel:')) {
+          link.setAttribute('href', `https://${href}`);
+        }
+      }
+    });
+
     const header = `MIME-Version: 1.0\nContent-Type: multipart/related; boundary="BOUNDARY"\n\n--BOUNDARY\nContent-Type: text/html; charset="utf-8"\n\n`;
     const footer = `\n--BOUNDARY--`;
 
@@ -192,6 +254,10 @@ function App() {
   <style>
     body { font-family: Arial, sans-serif; font-size: 12pt; line-height: 1.6; }
     p { margin: 0 0 12pt 0; }
+    a { color: #2563eb; text-decoration: underline; }
+    a[href^="mailto:"] { color: #2563eb; text-decoration: underline; }
+    a[href^="tel:"] { color: #2563eb; text-decoration: underline; }
+    a[href^="http"] { color: #2563eb; text-decoration: underline; }
   </style>
 </head>
 <body>
@@ -381,6 +447,8 @@ function App() {
                   templateColorScheme={templateColorScheme}
                   atsScore={atsScore}
                   healthScore={healthScore}
+                  exactMode={exactMode}
+                  onToggleExactMode={() => setExactMode(prev => !prev)}
                 />
               </div>
             </div>

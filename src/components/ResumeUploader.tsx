@@ -68,7 +68,22 @@ const ResumeUploader: React.FC<ResumeUploaderProps> = ({ onResumeExtracted, onCl
       throw new Error('Invalid file content');
     }
 
-    const lines = text.split('\n').map(l => l.trim()).filter(l => l);
+    // Normalize text from PDFs where newlines are lost; add newlines before section keywords and bullets
+    const normalizedText = text
+      .replace(/\u2022/g, '•')
+      .replace(/\s+•\s+/g, '\n• ')
+      .replace(/\s+-\s+/g, '\n- ')
+      .replace(/\s*Summary\s*[:\-]?/gi, '\nSummary\n')
+      .replace(/\s*Professional\s+Summary\s*[:\-]?/gi, '\nProfessional Summary\n')
+      .replace(/\s*Education\s*[:\-]?/gi, '\nEducation\n')
+      .replace(/\s*(Work\s+)?Experience\s*[:\-]?/gi, '\nExperience\n')
+      .replace(/\s*Projects?\s*[:\-]?/gi, '\nProjects\n')
+      .replace(/\s*Certifications?\s*[:\-]?/gi, '\nCertifications\n')
+      .replace(/\s*Achievements?|Awards?|Honors?\s*[:\-]?/gi, '\nAchievements\n')
+      .replace(/\s*Skills?|Core\s+Competencies\s*[:\-]?/gi, '\nSkills\n')
+      .replace(/\s*Languages?\s*[:\-]?/gi, '\nLanguages\n');
+
+    const lines = normalizedText.split(/\n|\r/).map(l => l.trim()).filter(l => l);
 
     const resumeData: any = {
       personalInfo: {
@@ -87,11 +102,12 @@ const ResumeUploader: React.FC<ResumeUploaderProps> = ({ onResumeExtracted, onCl
       achievements: [],
       languages: [],
       hobbies: [],
-      socialLinks: {}
+      socialLinks: {},
+      rawText: text
     };
 
     const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
-    const phoneRegex = /(\+?\d{1,3}[-.\s]?)?\(?\d{3,4}\)?[-.\s]?\d{3,4}[-.\s]?\d{4}/g;
+    const phoneRegex = /(\+?\d{1,3}[-.\s]?)?\(?\d{2,4}\)?[-.\s]?\d{3,4}[-.\s]?\d{3,4}/g;
     const urlRegex = /(https?:\/\/[^\s]+)/g;
     const linkedinRegex = /linkedin\.com\/in\/[^\s]+/g;
     const githubRegex = /github\.com\/[^\s]+/g;
@@ -114,18 +130,30 @@ const ResumeUploader: React.FC<ResumeUploaderProps> = ({ onResumeExtracted, onCl
       resumeData.socialLinks.github = githubMatch[0].startsWith('http') ? githubMatch[0] : `https://${githubMatch[0]}`;
     }
 
-    // Extract name - look for capitalized words at the start (typically full names)
-    for (let i = 0; i < Math.min(5, lines.length); i++) {
-      const line = lines[i];
-      if (!resumeData.personalInfo.fullName &&
-          line.length > 3 &&
-          line.length < 100 &&
-          !line.includes('@') &&
-          !line.match(/\d{3,}/) &&
-          !/^https?/.test(line) &&
-          /^[A-Z][a-z]+(\s+[A-Z][a-z]+)+/.test(line)) {
-        resumeData.personalInfo.fullName = line;
-        break;
+    // Extract name - search first 10 lines for two or more capitalized words
+    if (!resumeData.personalInfo.fullName) {
+      for (let i = 0; i < Math.min(10, lines.length); i++) {
+        const line = lines[i].replace(/[,|]/g, ' ').trim();
+        const isCandidate =
+          line.length >= 5 && line.length <= 80 &&
+          !line.includes('@') && !/\d{3,}/.test(line) && !/^https?:/i.test(line);
+        const wordCount = (line.match(/[A-Z][a-z]+/g) || []).length;
+        if (isCandidate && wordCount >= 2) {
+          resumeData.personalInfo.fullName = line;
+          break;
+        }
+      }
+    }
+
+    // Extract professional title from early lines or from summary sentence
+    if (!resumeData.personalInfo.title) {
+      const titleKeywords = /(software|developer|engineer|student|designer|manager|analyst|architect|lead)/i;
+      for (let i = 0; i < Math.min(15, lines.length); i++) {
+        const line = lines[i];
+        if (!line.includes('@') && titleKeywords.test(line) && line.length <= 80) {
+          resumeData.personalInfo.title = line.replace(/\s{2,}/g, ' ').trim();
+          break;
+        }
       }
     }
 
@@ -174,7 +202,7 @@ const ResumeUploader: React.FC<ResumeUploaderProps> = ({ onResumeExtracted, onCl
 
       // Parse summary
       if (currentSection === 'summary') {
-        if (line.length > 30 && !lowerLine.match(/^(experience|education|skills)/)) {
+        if (line.length > 15 && !lowerLine.match(/^(experience|education|skills|projects|certifications|achievements|languages)/)) {
           summaryLines.push(line);
         } else if (summaryLines.length > 0) {
           resumeData.personalInfo.summary = summaryLines.join(' ').trim();
@@ -202,7 +230,7 @@ const ResumeUploader: React.FC<ResumeUploaderProps> = ({ onResumeExtracted, onCl
             description: ''
           };
           descriptionBuffer = [];
-        } else if (isBullet && line.length > 10) {
+        } else if (isBullet && line.replace(/^[•\-*]\s*/, '').length > 3) {
           descriptionBuffer.push(line.replace(/^[•\-*]\s*/, ''));
         }
       }
@@ -250,7 +278,9 @@ const ResumeUploader: React.FC<ResumeUploaderProps> = ({ onResumeExtracted, onCl
             const skillMatch = skillsText.split(/[,;|&]/);
             skillMatch.forEach(skill => {
               const s = skill.trim();
-              if (s.length > 0 && s.length < 40) {
+              const wordCount = s.split(/\s+/).filter(Boolean).length;
+              const looksSentence = /\.$/.test(s);
+              if (s.length > 0 && s.length < 40 && wordCount <= 4 && !looksSentence) {
                 resumeData.skills.push(s);
               }
             });
@@ -260,7 +290,9 @@ const ResumeUploader: React.FC<ResumeUploaderProps> = ({ onResumeExtracted, onCl
           const skillMatch = line.replace(/^[•\-*]\s*/, '').split(/[,;|&]/);
           skillMatch.forEach(skill => {
             const s = skill.trim();
-            if (s.length > 1 && s.length < 40 && !s.match(/^(skills|technical)/i)) {
+            const wordCount = s.split(/\s+/).filter(Boolean).length;
+            const looksSentence = /\.$/.test(s) || /\b(using|projects?|goal|experience)\b/i.test(s);
+            if (s.length > 1 && s.length < 40 && wordCount <= 4 && !looksSentence && !s.match(/^(skills|technical)/i)) {
               resumeData.skills.push(s);
             }
           });
@@ -268,16 +300,29 @@ const ResumeUploader: React.FC<ResumeUploaderProps> = ({ onResumeExtracted, onCl
       }
 
       // Parse projects
-      if (currentSection === 'projects' && line.length > 5) {
-        if (!line.match(/^[•\-*]/)) {
+      if (currentSection === 'projects' && line.length > 3) {
+        const isBullet = /^([•\-*])\s*/.test(line);
+        const clean = line.replace(/^([•\-*])\s*/, '');
+        const looksLikeUrl = /https?:\/\//i.test(clean) || /github\.com\//i.test(clean);
+
+        // Title heuristics: 2-8 words, TitleCase-ish, avoid generic prefixes
+        const wc = clean.split(/\s+/).filter(Boolean).length;
+        const looksLikeTitle = !isBullet && wc >= 2 && wc <= 8 && !/[.!?]$/.test(clean) && !/^(using|technologies|tools|objective|summary|my goal)/i.test(clean);
+
+        if (looksLikeTitle) {
           if (currentItem && currentItem.title) {
             currentItem.description = descriptionBuffer.join(' ').trim();
             resumeData.projects.push(currentItem);
           }
-          currentItem = { title: line, description: '', url: '' };
+          const title = clean.replace(/^\"|\"$/g, '').replace(/\s*\.?\d+\s*$/, '');
+          currentItem = { title: title, description: '', url: '' };
           descriptionBuffer = [];
+        } else if (looksLikeUrl) {
+          if (!currentItem) currentItem = { title: 'Project', description: '', url: '' };
+          currentItem.url = clean.match(/https?:\/\/\S+/)?.[0] || clean;
         } else {
-          descriptionBuffer.push(line.replace(/^[•\-*]\s*/, ''));
+          if (!currentItem) currentItem = { title: 'Project', description: '', url: '' };
+          descriptionBuffer.push(clean);
         }
       }
 
@@ -301,15 +346,16 @@ const ResumeUploader: React.FC<ResumeUploaderProps> = ({ onResumeExtracted, onCl
         }
       }
 
-      // Parse languages
+      // Parse languages (strict filtering)
       if (currentSection === 'languages' && line.length > 2) {
-        const parts = line.replace(/^[•\-*]\s*/, '').split(/[\-–:,]/);
-        if (parts.length >= 1) {
-          resumeData.languages.push({
-            name: parts[0].trim(),
-            proficiency: parts[1]?.trim() || 'Fluent'
-          });
-        }
+        const cleanLang = line.replace(/^[•\-*]\s*/, '');
+        const candidates = cleanLang.split(/[,|]/).map(s => s.trim()).filter(Boolean);
+        const blocklist = /(web|development|subject|programming|react|node|html|css|tools)/i;
+        candidates.forEach(c => {
+          if (!blocklist.test(c)) {
+            resumeData.languages.push({ name: c, proficiency: 'Professional' });
+          }
+        });
       }
 
       // Extract professional title from first few lines
@@ -361,31 +407,6 @@ const ResumeUploader: React.FC<ResumeUploaderProps> = ({ onResumeExtracted, onCl
     resumeData.certifications = resumeData.certifications.filter((c: any) => c.name);
     resumeData.achievements = resumeData.achievements.filter((a: any) => a.description);
     resumeData.languages = resumeData.languages.filter((l: any) => l.name);
-
-    // Only add minimal fallback if absolutely no data was extracted
-    const hasAnyContent =
-      resumeData.personalInfo.fullName ||
-      resumeData.personalInfo.email ||
-      resumeData.experience.length > 0 ||
-      resumeData.education.length > 0 ||
-      resumeData.skills.length > 0;
-
-    if (!hasAnyContent) {
-      // If nothing was extracted at all, add minimal placeholder
-      resumeData.personalInfo.fullName = 'Your Name';
-      resumeData.experience.push({
-        position: 'Professional',
-        company: 'Company Name',
-        duration: '2020 - Present',
-        description: 'Add your work experience details here with key achievements and responsibilities.'
-      });
-      resumeData.education.push({
-        degree: 'Your Degree',
-        school: 'University Name',
-        year: '2020'
-      });
-      resumeData.skills = ['Leadership', 'Communication', 'Problem Solving', 'Project Management'];
-    }
 
     return resumeData;
   };
