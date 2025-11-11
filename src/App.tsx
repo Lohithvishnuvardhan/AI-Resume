@@ -15,6 +15,7 @@ import ToastContainer from './components/ToastContainer';
 import Confetti from './components/Confetti';
 import { showToast } from './components/ToastContainer';
 
+
 function App() {
   const [showLandingPage, setShowLandingPage] = useState(true);
   const [resumeData, setResumeData] = useState({
@@ -53,6 +54,7 @@ function App() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [exactMode, setExactMode] = useState(false);
+
 
   useEffect(() => {
     // Always show landing page on first load
@@ -288,6 +290,7 @@ function App() {
   if (showLandingPage) {
     return (
       <>
+
         <LandingPage
           onGetStarted={handleGetStarted}
           onOpenHelp={() => setShowHelpPanel(true)}
@@ -329,6 +332,7 @@ function App() {
       </div>
 
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6 lg:py-8 relative z-10 animate-fade-in">
+
         <header className="text-center mb-6 sm:mb-8 lg:mb-12 animate-slide-up">
           {/* Premium Header with Glassmorphism */}
           <div className="backdrop-blur-xl bg-gradient-to-r from-gray-800/80 via-gray-800/60 to-gray-800/80 rounded-2xl border border-gray-700/50 p-6 sm:p-8 shadow-2xl mb-6">
@@ -418,6 +422,8 @@ function App() {
           </div>
         </header>
 
+
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-10">
           {/* Form Section with Premium Glassmorphism */}
           <div className="animate-slide-in-right">
@@ -494,6 +500,7 @@ function App() {
 
       <ToastContainer />
       <Confetti trigger={showConfetti} />
+
     </div>
   );
 }

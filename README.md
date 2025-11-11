@@ -59,6 +59,41 @@ npm run dev
 
 The application will open at `http://localhost:5173`
 
+## Supabase Integration
+
+Follow these steps exactly to connect the app to your Supabase project:
+
+1. **Create tables inside Supabase**
+   - Open Supabase → SQL Editor.
+   - Paste the contents of `backend/supabase/schema.sql`.
+   - Run the script once to create tables and seed the demo admin user.
+
+2. **Add environment variables**
+   - In the project root, create a `.env` file (ignored by Git).
+   - Add the following lines using the values from Supabase → Project Settings → API:
+     ```
+     VITE_SUPABASE_URL=your-project-url
+     VITE_SUPABASE_ANON_KEY=your-anon-key
+     ```
+
+3. **Install the Supabase client**
+   ```bash
+   npm install @supabase/supabase-js
+   ```
+
+4. **Start the dev server**
+   ```bash
+   npm run dev
+   ```
+   - Open the browser and use the “Login / Sign up” button (top right).
+   - Register normally for user accounts; tick “Register as admin” for admin demos.
+
+5. **Verify admin UI**
+   - After logging in as admin, the “Admin Demo Tools” card appears in the builder view.
+   - Logging out hides admin-only content.
+
+Keep future migrations or seed data inside `backend/supabase/` so your database setup stays in sync.
+
 ## Build for Production
 
 ```bash
