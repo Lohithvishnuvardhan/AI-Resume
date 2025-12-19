@@ -34,6 +34,18 @@ npm run dev
 
 The application will open at `http://localhost:5173`
 
+## 🔓 Activating Downloads (For Buyers)
+
+**Important:** After purchase, you need to activate PDF/Word downloads:
+
+1. Open `src/config.ts`
+2. Change `IS_PURCHASED = false` to `IS_PURCHASED = true`
+3. Save and restart your dev server
+
+See `ACTIVATION_INSTRUCTIONS.md` for detailed steps.
+
+**For Sellers/Demo:** Keep `IS_PURCHASED = false` to show Gumroad redirects.
+
 ## 🎨 Customization
 
 ### Changing Colors & Styles
@@ -48,9 +60,10 @@ Edit `src/index.css` and `tailwind.config.js` to modify colors, fonts, and styli
 
 ### Adding Your Gumroad Link
 
-1. Open `src/components/LandingPage.tsx`
-2. Find: `const GUMROAD_URL = 'https://gumroad.com/l/ai-resume-builder-template';`
+1. Open `src/config.ts`
+2. Find: `export const GUMROAD_URL = 'https://gumroad.com/l/ai-resume-builder-template';`
 3. Replace with your actual Gumroad product URL
+4. The URL is automatically used throughout the app
 
 ### Modifying Features
 
@@ -152,7 +165,7 @@ For support, please contact the template author through Gumroad.
 
 ---
 
-**Version:** 1.0.0  
+**Version:** 1.0.0
 **Last Updated:** 2025
 
 Enjoy building with this template! 🚀

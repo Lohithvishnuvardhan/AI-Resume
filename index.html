@@ -3,24 +3,39 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="./vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+    <meta name="theme-color" content="#0f172a" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
     <!-- Primary Meta Tags -->
     <title>ResumeAI Pro - AI-Powered Resume Builder | Create Professional Resumes in Minutes</title>
     <meta name="title" content="ResumeAI Pro - AI-Powered Resume Builder | Create Professional Resumes in Minutes">
     <meta name="description" content="Build professional, ATS-optimized resumes with AI-powered suggestions. 50+ premium templates, instant PDF/Word download, and expert career tools trusted by 1M+ professionals. Start free today!">
-    <meta name="keywords" content="AI resume builder, professional resume maker, ATS optimized resume, resume templates, CV builder, career tools, job search, resume generator, free resume builder, online resume">
+    <meta name="keywords" content="AI resume builder, professional resume maker, ATS optimized resume, resume templates, CV builder, career tools, job search, resume generator, free resume builder, online resume, mobile resume builder, tablet resume builder">
     <meta name="author" content="ResumeAI Pro">
-    <meta name="robots" content="index, follow">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="googlebot" content="index, follow">
     <link rel="canonical" href="https://resumeaipro.lify.app" />
+    
+    <!-- Performance Hints -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://resumeaipro.lify.app">
     <meta property="og:title" content="ResumeAI Pro - AI-Powered Resume Builder">
     <meta property="og:description" content="Create professional, ATS-optimized resumes that get you hired. AI-powered suggestions, premium templates, and instant downloads.">
-  <meta property="og:image" content="./logo.png">
+    <meta property="og:image" content="./logo.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="ResumeAI Pro - AI Resume Builder">
     <meta property="og:site_name" content="ResumeAI Pro">
+    <meta property="og:locale" content="en_US">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
@@ -36,6 +51,7 @@
       "@type": "SoftwareApplication",
       "name": "ResumeAI Pro",
       "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web Browser, iOS, Android",
       "offers": {
         "@type": "Offer",
         "price": "0",
@@ -48,21 +64,29 @@
         "bestRating": "5",
         "worstRating": "1"
       },
-      "description": "AI-powered resume builder with professional templates, ATS optimization, and instant PDF/Word downloads.",
-      "operatingSystem": "Web Browser",
+      "description": "AI-powered resume builder with professional templates, ATS optimization, and instant PDF/Word downloads. Works on mobile, tablet, and desktop devices.",
       "softwareVersion": "2.0",
       "url": "https://resumeaipro.lify.app",
-  "image": "/logo.png",
+      "image": "/logo.png",
+      "screenshot": "/logo.png",
       "author": {
         "@type": "Organization",
         "name": "ResumeAI Pro"
-      }
+      },
+      "featureList": [
+        "AI-powered resume suggestions",
+        "ATS-optimized templates",
+        "PDF and Word export",
+        "Mobile responsive design",
+        "Real-time preview",
+        "Multiple professional templates"
+      ]
     }
     </script>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Font Optimization - Load only what's needed -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet" /></noscript>
   </head>
   <body>
     <div id="root"></div>

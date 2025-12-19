@@ -13,10 +13,10 @@ import LandingPage from './components/LandingPage';
 import ToastContainer from './components/ToastContainer';
 import Confetti from './components/Confetti';
 import { showToast } from './components/ToastContainer';
+import { IS_PURCHASED, GUMROAD_URL } from './config';
 
 
 function App() {
-  const GUMROAD_URL = 'https://gumroad.com/l/ai-resume-builder-template';
   const [showLandingPage, setShowLandingPage] = useState(true);
   const [resumeData, setResumeData] = useState({
     personalInfo: {
@@ -137,14 +137,124 @@ function App() {
     }
   };
 
-  const handleDownloadPDF = () => {
-    window.open(GUMROAD_URL, '_blank', 'noopener,noreferrer');
-    showToast('This is a demo. Purchase the template on Gumroad to unlock PDF downloads.', 'info');
+  const handleDownloadPDF = async () => {
+    // Check if template is purchased
+    if (!IS_PURCHASED) {
+      window.open(GUMROAD_URL, '_blank', 'noopener,noreferrer');
+      showToast('This is a demo. Purchase the template on Gumroad to unlock PDF downloads.', 'info');
+      return;
+    }
+
+    // Purchased version - actual download functionality
+    try {
+      setIsDownloading(true);
+      const previewElement = document.querySelector('.resume-preview-content') as HTMLElement;
+      
+      if (!previewElement) {
+        showToast('Resume preview not found. Please ensure the preview is visible.', 'error');
+        setIsDownloading(false);
+        return;
+      }
+
+      // Dynamically import html2pdf to avoid loading it until needed
+      const html2pdf = (await import('html2pdf.js')).default;
+
+      const opt = {
+        margin: 0.5,
+        filename: `${resumeData.personalInfo.fullName || 'Resume'}-Resume.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { 
+          scale: 2, 
+          useCORS: true,
+          logging: false,
+          backgroundColor: '#ffffff'
+        },
+        jsPDF: { 
+          unit: 'in', 
+          format: 'letter', 
+          orientation: 'portrait' as 'portrait'
+        },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+      };
+
+      await html2pdf().set(opt).from(previewElement).save();
+      showToast('PDF downloaded successfully!', 'success');
+      setShowConfetti(true);
+      setTimeout(() => setShowConfetti(false), 3000);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      showToast('Failed to generate PDF. Please try again.', 'error');
+    } finally {
+      setIsDownloading(false);
+    }
   };
 
-  const handleDownloadWord = () => {
-    window.open(GUMROAD_URL, '_blank', 'noopener,noreferrer');
-    showToast('This is a demo. Purchase the template on Gumroad to unlock Word downloads.', 'info');
+  const handleDownloadWord = async () => {
+    // Check if template is purchased
+    if (!IS_PURCHASED) {
+      window.open(GUMROAD_URL, '_blank', 'noopener,noreferrer');
+      showToast('This is a demo. Purchase the template on Gumroad to unlock Word downloads.', 'info');
+      return;
+    }
+
+    // Purchased version - actual download functionality
+    try {
+      setIsDownloading(true);
+      const previewElement = document.querySelector('.resume-preview-content') as HTMLElement;
+      
+      if (!previewElement) {
+        showToast('Resume preview not found. Please ensure the preview is visible.', 'error');
+        setIsDownloading(false);
+        return;
+      }
+
+      // Clone the element to avoid modifying the original
+      const clonedElement = previewElement.cloneNode(true) as HTMLElement;
+      
+      // Remove any elements that shouldn't be in the Word doc
+      const elementsToRemove = clonedElement.querySelectorAll('.ats-badge, .exact-mode-toggle, button, [data-exclude-from-download]');
+      elementsToRemove.forEach(el => el.remove());
+
+      // Get the HTML content
+      const htmlContent = clonedElement.innerHTML;
+      
+      // Create a blob with Word-compatible HTML
+      const header = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0.5in; }
+    h1, h2, h3 { color: #000; }
+    a { color: #2563eb; text-decoration: underline; }
+  </style>
+</head>
+<body>`;
+      const footer = `</body>
+</html>`;
+      
+      const fullHtml = header + htmlContent + footer;
+      const blob = new Blob([fullHtml], { type: 'application/msword' });
+      
+      // Create download link
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${resumeData.personalInfo.fullName || 'Resume'}-Resume.doc`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      
+      showToast('Word document downloaded successfully!', 'success');
+      setShowConfetti(true);
+      setTimeout(() => setShowConfetti(false), 3000);
+    } catch (error) {
+      console.error('Error generating Word document:', error);
+      showToast('Failed to generate Word document. Please try again.', 'error');
+    } finally {
+      setIsDownloading(false);
+    }
   };
 
   if (showLandingPage) {
@@ -231,10 +341,19 @@ function App() {
             <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mt-6 sm:mt-8 px-2">
             <button
               onClick={handleDownloadPDF}
-              className="group flex items-center justify-center gap-1.5 sm:gap-2 px-4 sm:px-5 lg:px-6 py-2.5 sm:py-3 lg:py-3.5 bg-gradient-to-r from-emerald-500 to-cyan-600 text-white rounded-lg sm:rounded-xl font-semibold hover:from-emerald-600 hover:to-cyan-700 transition-all shadow-lg hover:shadow-emerald-500/30 transform hover:scale-105 active:scale-95 text-sm sm:text-base lg:text-base min-w-[200px] sm:min-w-[230px]"
+              disabled={isDownloading && IS_PURCHASED}
+              className="group flex items-center justify-center gap-1.5 sm:gap-2 px-4 sm:px-5 lg:px-6 py-2.5 sm:py-3 lg:py-3.5 bg-gradient-to-r from-emerald-500 to-cyan-600 text-white rounded-lg sm:rounded-xl font-semibold hover:from-emerald-600 hover:to-cyan-700 transition-all shadow-lg hover:shadow-emerald-500/30 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none text-sm sm:text-base lg:text-base min-w-[200px] sm:min-w-[230px]"
             >
-              <Download className="w-4 h-4 sm:w-5 sm:h-5 group-hover:animate-bounce" />
-              <span>Purchase to download PDF / Word</span>
+              <Download className={`w-4 h-4 sm:w-5 sm:h-5 ${isDownloading && IS_PURCHASED ? 'animate-spin' : 'group-hover:animate-bounce'}`} />
+              <span>{isDownloading && IS_PURCHASED ? 'Generating PDF...' : IS_PURCHASED ? 'Download PDF' : 'Purchase to download PDF'}</span>
+            </button>
+            <button
+              onClick={handleDownloadWord}
+              disabled={isDownloading && IS_PURCHASED}
+              className="group flex items-center justify-center gap-1.5 sm:gap-2 px-4 sm:px-5 lg:px-6 py-2.5 sm:py-3 lg:py-3.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg sm:rounded-xl font-semibold hover:from-blue-600 hover:to-blue-700 transition-all shadow-lg hover:shadow-blue-500/30 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none text-sm sm:text-base lg:text-base min-w-[160px] sm:min-w-[180px]"
+            >
+              <FileDown className={`w-4 h-4 sm:w-5 sm:h-5 ${isDownloading && IS_PURCHASED ? 'animate-spin' : 'group-hover:animate-bounce'}`} />
+              <span>{isDownloading && IS_PURCHASED ? 'Generating...' : IS_PURCHASED ? 'Download Word' : 'Purchase to download Word'}</span>
             </button>
             <button
               onClick={() => setShowCoverLetterBuilder(true)}

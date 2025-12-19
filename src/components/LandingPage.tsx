@@ -1,7 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef, Suspense, lazy } from 'react';
 import { FileText, CheckCircle, Upload, Zap, Shield, ChevronDown, ChevronUp, Star, Award, Lock, Eye, Download, Users, TrendingUp, Linkedin, Briefcase, Github, Globe, ArrowRight, Sparkles, Crown, Rocket, CheckCircle2, Quote, Code, GraduationCap } from 'lucide-react';
 import PolicyModal from './PolicyModal';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
+import { GUMROAD_URL } from '../config';
+
+// Lazy load heavy components
+const TemplateCarousel = lazy(() => import('./TemplateCarousel'));
 
 interface LandingPageProps {
   onGetStarted: (templateId?: string) => void;
@@ -15,7 +19,27 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
   const [previewSample, setPreviewSample] = useState<number | null>(null);
   const [showPolicyModal, setShowPolicyModal] = useState(false);
   const [policyType, setPolicyType] = useState<'privacy' | 'terms' | 'refund' | null>(null);
-  const GUMROAD_URL = 'https://gumroad.com/l/ai-resume-builder-template';
+  const [videoLoaded, setVideoLoaded] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Detect mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Optimize video loading - only load when in viewport or after initial render
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setVideoLoaded(true);
+    }, 500); // Delay video loading slightly for faster initial render
+    return () => clearTimeout(timer);
+  }, []);
 
   const toggleFAQ = (index: number) => {
     setExpandedFAQ(expandedFAQ === index ? null : index);
@@ -34,19 +58,32 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      {/* Global Background Video (fixed, full-page) */}
+      {/* Global Background Video (fixed, full-page) - Optimized Loading */}
       <div className="fixed inset-0 -z-10 pointer-events-none">
-        <video
-          className="w-full h-full object-cover"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          style={{ opacity: 0.25 }}
-        >
-          <source src="/resumevideo(hero section).mp4" type="video/mp4" />
-        </video>
+        {videoLoaded ? (
+          <video
+            ref={videoRef}
+            className="w-full h-full object-cover"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload={isMobile ? "none" : "metadata"}
+            loading="lazy"
+            style={{ opacity: 0.25 }}
+            onLoadedData={() => {
+              if (videoRef.current) {
+                videoRef.current.play().catch(() => {
+                  // Auto-play failed, video will play on user interaction
+                });
+              }
+            }}
+          >
+            <source src="/resumevideo(hero section).mp4" type="video/mp4" />
+          </video>
+        ) : (
+          <div className="w-full h-full bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900"></div>
+        )}
         {/* Overlay gradient for readability across the page */}
         <div className="absolute inset-0 bg-gradient-to-b from-gray-900/60 via-gray-900/40 to-gray-900/70"></div>
       </div>
@@ -67,7 +104,15 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
               <div className="relative">
                 <div className="absolute inset-0 bg-blue-500/40 blur-xl rounded-lg animate-pulse"></div>
                 <div className="relative w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 flex items-center justify-center">
-                  <img src="/logo.png" alt="Resume Ai Pro" className="w-full h-full object-contain" />
+                  <img 
+                    src="/logo.png" 
+                    alt="Resume Ai Pro - AI Resume Builder" 
+                    className="w-full h-full object-contain"
+                    loading="eager"
+                    width="48"
+                    height="48"
+                    decoding="async"
+                  />
                 </div>
               </div>
               
@@ -155,24 +200,33 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
         </div>
       </nav>
 
-      {/* Hero Section – Template Demo */}
-      <section className="pt-20 sm:pt-24 lg:pt-32 pb-12 sm:pb-16 lg:pb-20 px-3 sm:px-4 lg:px-6 relative overflow-hidden" style={{ contentVisibility: 'auto', containIntrinsicSize: '600px' }}>
-        {/* Video Background */}
-        <div className="absolute inset-0 w-full h-full z-0">
-          <video 
-            className="w-full h-full object-cover"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-            style={{ opacity: 0.25 }}
-          >
-            <source src="/resumevideo(hero section).mp4" type="video/mp4" />
-          </video>
-          {/* Dark overlay for better text contrast */}
-          <div className="absolute inset-0 bg-gradient-to-b from-gray-900/60 via-gray-900/40 to-gray-900/60"></div>
-        </div>
+      {/* Hero Section – Template Demo - Optimized */}
+      <section 
+        id="hero"
+        className="pt-20 sm:pt-24 lg:pt-32 pb-12 sm:pb-16 lg:pb-20 px-3 sm:px-4 lg:px-6 relative overflow-hidden" 
+        itemScope 
+        itemType="https://schema.org/WebPage"
+        style={{ contentVisibility: 'auto', containIntrinsicSize: '600px' }}
+      >
+        {/* Video Background - Lazy loaded */}
+        {videoLoaded && (
+          <div className="absolute inset-0 w-full h-full z-0">
+            <video 
+              className="w-full h-full object-cover"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload={isMobile ? "none" : "metadata"}
+              loading="lazy"
+              style={{ opacity: 0.25 }}
+            >
+              <source src="/resumevideo(hero section).mp4" type="video/mp4" />
+            </video>
+            {/* Dark overlay for better text contrast */}
+            <div className="absolute inset-0 bg-gradient-to-b from-gray-900/60 via-gray-900/40 to-gray-900/60"></div>
+          </div>
+        )}
         
         <div className="max-w-6xl mx-auto text-center relative z-10">
           <div className="inline-block mb-6">
@@ -184,7 +238,11 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
               <span className="text-sm font-semibold text-blue-400">Gumroad-ready SaaS template demo</span>
             </div>
           </div>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight animate-fade-in-up px-2 drop-shadow-2xl" style={{fontFamily: 'Playfair Display, Georgia, serif', textShadow: '0 4px 20px rgba(0, 0, 0, 0.8), 0 2px 10px rgba(0, 0, 0, 0.6)'}}>
+          <h1 
+            itemProp="headline"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight animate-fade-in-up px-2 drop-shadow-2xl" 
+            style={{fontFamily: 'Playfair Display, Georgia, serif', textShadow: '0 4px 20px rgba(0, 0, 0, 0.8), 0 2px 10px rgba(0, 0, 0, 0.6)'}}
+          >
             AI Resume Builder Website Template
             <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-teal-400 mt-2 animate-gradient" style={{textShadow: '0 4px 20px rgba(0, 0, 0, 0.8)'}}>
               A modern resume builder you can sell, customize, or launch as your own SaaS
@@ -1173,7 +1231,15 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
                 <div className="relative">
                   <div className="absolute inset-0 bg-blue-500/40 blur-xl rounded-lg"></div>
                   <div className="relative w-8 h-8 flex items-center justify-center">
-                    <img src="/logo.png" alt="Resume Ai Pro" className="w-full h-full object-contain" />
+                    <img 
+                      src="/logo.png" 
+                      alt="Resume Ai Pro - AI Resume Builder" 
+                      className="w-full h-full object-contain"
+                      loading="lazy"
+                      width="48"
+                      height="48"
+                      decoding="async"
+                    />
                   </div>
                 </div>
                 <div className="flex items-center gap-2">

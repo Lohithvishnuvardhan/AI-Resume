@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FileText, Sparkles, Download, Copy, RefreshCw, FileDown } from 'lucide-react';
 import html2pdf from 'html2pdf.js';
+import { IS_PURCHASED, GUMROAD_URL } from '../config';
 
 interface CoverLetterData {
   jobTitle: string;
@@ -69,12 +70,87 @@ ${coverLetterData.yourName || coverLetterData.personalInfo.fullName}`;
     navigator.clipboard.writeText(generatedLetter);
   };
 
-  const downloadAsPDF = () => {
-    alert('Preview only – downloading cover letters is available after purchasing the template on Gumroad.');
+  const downloadAsPDF = async () => {
+    if (!IS_PURCHASED) {
+      window.open(GUMROAD_URL, '_blank', 'noopener,noreferrer');
+      alert('Preview only – downloading cover letters is available after purchasing the template on Gumroad.');
+      return;
+    }
+
+    try {
+      const letterElement = document.querySelector('.cover-letter-content') as HTMLElement;
+      if (!letterElement) {
+        // Create a temporary element if not found
+        const tempDiv = document.createElement('div');
+        tempDiv.className = 'cover-letter-content';
+        tempDiv.style.padding = '1in';
+        tempDiv.style.fontFamily = 'Arial, sans-serif';
+        tempDiv.style.whiteSpace = 'pre-wrap';
+        tempDiv.textContent = generatedLetter;
+        document.body.appendChild(tempDiv);
+
+        const opt = {
+          margin: 0.5,
+          filename: `${coverLetterData.yourName || 'CoverLetter'}-CoverLetter.pdf`,
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff' },
+          jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' as 'portrait' }
+        };
+
+        await html2pdf().set(opt).from(tempDiv).save();
+        document.body.removeChild(tempDiv);
+      } else {
+        const opt = {
+          margin: 0.5,
+          filename: `${coverLetterData.yourName || 'CoverLetter'}-CoverLetter.pdf`,
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2, useCORS: true, logging: false, backgroundColor: '#ffffff' },
+          jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' as 'portrait' }
+        };
+
+        await html2pdf().set(opt).from(letterElement).save();
+      }
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Failed to generate PDF. Please try again.');
+    }
   };
 
   const downloadAsWord = () => {
-    alert('Preview only – downloading cover letters is available after purchasing the template on Gumroad.');
+    if (!IS_PURCHASED) {
+      window.open(GUMROAD_URL, '_blank', 'noopener,noreferrer');
+      alert('Preview only – downloading cover letters is available after purchasing the template on Gumroad.');
+      return;
+    }
+
+    try {
+      const header = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0.5in; white-space: pre-wrap; }
+  </style>
+</head>
+<body>`;
+      const footer = `</body>
+</html>`;
+      
+      const fullHtml = header + generatedLetter.replace(/\n/g, '<br>') + footer;
+      const blob = new Blob([fullHtml], { type: 'application/msword' });
+      
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${coverLetterData.yourName || 'CoverLetter'}-CoverLetter.doc`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error generating Word document:', error);
+      alert('Failed to generate Word document. Please try again.');
+    }
   };
 
   if (!isVisible) return null;
@@ -209,7 +285,7 @@ ${coverLetterData.yourName || coverLetterData.personalInfo.fullName}`;
                     Word
                   </button>
                 </div>
-                <div className="bg-gray-50 p-3 sm:p-6 rounded-lg">
+                <div className="bg-gray-50 p-3 sm:p-6 rounded-lg cover-letter-content">
                   <div className="whitespace-pre-wrap text-xs sm:text-sm text-gray-800 leading-relaxed" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
                     {generatedLetter}
                   </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Download, FileText, CreditCard as Edit3, User, Briefcase, GraduationCap, Award, Plus, Trash2, Lightbulb, AlertCircle, CheckCircle, Move, Sparkles, Code, Trophy, Languages, Heart, Globe, Linkedin, Github, Image, Users as FileUser } from 'lucide-react';
+import { Download, FileDown, FileText, CreditCard as Edit3, User, Briefcase, GraduationCap, Award, Plus, Trash2, Lightbulb, AlertCircle, CheckCircle, Move, Sparkles, Code, Trophy, Languages, Heart, Globe, Linkedin, Github, Image, Users as FileUser } from 'lucide-react';
 
 interface EditableResumeFormProps {
   resumeData: any;
@@ -503,10 +503,19 @@ const EditableResumeForm: React.FC<EditableResumeFormProps> = ({
         <div className="flex gap-3 w-full sm:w-auto">
           <button
             onClick={onDownloadPDF}
-            className="group flex-1 sm:flex-initial px-6 py-3 bg-gradient-to-r from-emerald-500 via-emerald-600 to-cyan-600 text-white rounded-xl font-semibold hover:from-emerald-600 hover:via-emerald-700 hover:to-cyan-700 transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-2xl hover:shadow-emerald-500/40 transform hover:scale-105 active:scale-95 will-change-transform border border-emerald-400/30 hover:border-emerald-300/60 text-sm sm:text-base"
+            className="group flex-1 sm:flex-initial px-4 sm:px-6 py-3 bg-gradient-to-r from-emerald-500 via-emerald-600 to-cyan-600 text-white rounded-xl font-semibold hover:from-emerald-600 hover:via-emerald-700 hover:to-cyan-700 transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-2xl hover:shadow-emerald-500/40 transform hover:scale-105 active:scale-95 will-change-transform border border-emerald-400/30 hover:border-emerald-300/60 text-sm sm:text-base"
           >
             <Download className="w-4 h-4 mr-2 group-hover:animate-bounce" />
-            <span>Purchase to download PDF / Word</span>
+            <span className="hidden sm:inline">Download PDF</span>
+            <span className="sm:hidden">PDF</span>
+          </button>
+          <button
+            onClick={onDownloadWord}
+            className="group flex-1 sm:flex-initial px-4 sm:px-6 py-3 bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 text-white rounded-xl font-semibold hover:from-blue-600 hover:via-blue-700 hover:to-blue-800 transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-2xl hover:shadow-blue-500/40 transform hover:scale-105 active:scale-95 will-change-transform border border-blue-400/30 hover:border-blue-300/60 text-sm sm:text-base"
+          >
+            <FileDown className="w-4 h-4 mr-2 group-hover:animate-bounce" />
+            <span className="hidden sm:inline">Download Word</span>
+            <span className="sm:hidden">Word</span>
           </button>
         </div>
       </div>
