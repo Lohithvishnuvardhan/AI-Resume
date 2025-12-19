@@ -70,69 +70,11 @@ ${coverLetterData.yourName || coverLetterData.personalInfo.fullName}`;
   };
 
   const downloadAsPDF = () => {
-    const element = document.createElement('div');
-    element.style.padding = '40px';
-    element.style.fontFamily = 'Arial, sans-serif';
-    element.style.fontSize = '12pt';
-    element.style.lineHeight = '1.5';
-    element.style.color = '#000';
-    element.innerHTML = generatedLetter.split('\n').map(line => `<p style="margin: 0 0 8px 0;">${line || '&nbsp;'}</p>`).join('');
-
-    const opt = {
-      margin: 1,
-      filename: `cover-letter-${coverLetterData.companyName.replace(/\s+/g, '-')}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-    };
-
-    // Fix TypeScript lint error regarding image.type
-    // Specify type as one of the allowed values: "jpeg" | "png" | "webp" | undefined
-    const fixedOpt = {
-      ...opt,
-      image: { ...opt.image, type: "jpeg" as "jpeg" }
-    };
-
-    // Use the fixed option object; fix orientation TS error by casting as allowed type
-    html2pdf().set({
-      ...fixedOpt,
-      jsPDF: {
-        ...fixedOpt.jsPDF,
-        orientation: fixedOpt.jsPDF.orientation as "portrait"
-      }
-    }).from(element).save();
+    alert('Preview only – downloading cover letters is available after purchasing the template on Gumroad.');
   };
 
   const downloadAsWord = () => {
-    const header = `MIME-Version: 1.0\nContent-Type: multipart/related; boundary="BOUNDARY"\n\n--BOUNDARY\nContent-Type: text/html; charset="utf-8"\n\n`;
-    const footer = `\n--BOUNDARY--`;
-
-    const html = `<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <style>
-    body { font-family: Arial, sans-serif; font-size: 12pt; line-height: 1.5; }
-    p { margin: 0 0 8pt 0; }
-  </style>
-</head>
-<body>
-  ${generatedLetter.split('\n').map(line => `<p>${line || '&nbsp;'}</p>`).join('')}
-</body>
-</html>`;
-
-    const blob = new Blob([header + html + footer], {
-      type: 'application/msword'
-    });
-
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `cover-letter-${coverLetterData.companyName.replace(/\s+/g, '-')}.doc`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+    alert('Preview only – downloading cover letters is available after purchasing the template on Gumroad.');
   };
 
   if (!isVisible) return null;

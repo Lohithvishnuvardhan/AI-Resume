@@ -503,17 +503,10 @@ const EditableResumeForm: React.FC<EditableResumeFormProps> = ({
         <div className="flex gap-3 w-full sm:w-auto">
           <button
             onClick={onDownloadPDF}
-            className="group flex-1 sm:flex-initial px-6 py-3 bg-gradient-to-r from-red-500 via-red-600 to-red-700 text-white rounded-xl font-semibold hover:from-red-600 hover:via-red-700 hover:to-red-800 transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-2xl hover:shadow-red-500/50 transform hover:scale-105 active:scale-95 will-change-transform border border-red-400/20 hover:border-red-400/40"
+            className="group flex-1 sm:flex-initial px-6 py-3 bg-gradient-to-r from-emerald-500 via-emerald-600 to-cyan-600 text-white rounded-xl font-semibold hover:from-emerald-600 hover:via-emerald-700 hover:to-cyan-700 transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-2xl hover:shadow-emerald-500/40 transform hover:scale-105 active:scale-95 will-change-transform border border-emerald-400/30 hover:border-emerald-300/60 text-sm sm:text-base"
           >
             <Download className="w-4 h-4 mr-2 group-hover:animate-bounce" />
-            <span>PDF</span>
-          </button>
-          <button
-            onClick={onDownloadWord}
-            className="group flex-1 sm:flex-initial px-6 py-3 bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 text-white rounded-xl font-semibold hover:from-blue-600 hover:via-blue-700 hover:to-blue-800 transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-2xl hover:shadow-blue-500/50 transform hover:scale-105 active:scale-95 will-change-transform border border-blue-400/20 hover:border-blue-400/40"
-          >
-            <FileText className="w-4 h-4 mr-2 group-hover:rotate-12 transition-transform" />
-            <span>Word</span>
+            <span>Purchase to download PDF / Word</span>
           </button>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { Heart, TrendingUp, AlertCircle, CheckCircle, Star, Target } from 'lucide-react';
 
 interface HealthScorerProps {
@@ -16,7 +16,7 @@ interface HealthMetric {
 }
 
 const HealthScorer: React.FC<HealthScorerProps> = ({ resumeData, score, onScoreChange }) => {
-  const calculateHealthMetrics = (): HealthMetric[] => {
+  const memo = useMemo(() => {
     const metrics: HealthMetric[] = [
       {
         name: 'Content Quality',
@@ -71,15 +71,14 @@ const HealthScorer: React.FC<HealthScorerProps> = ({ resumeData, score, onScoreC
 
     const totalScore = metrics.reduce((sum, metric) => sum + metric.score, 0);
     const newScore = Math.round(totalScore);
-    
-    if (newScore !== score) {
-      onScoreChange(newScore);
-    }
+    return { metrics, newScore };
+  }, [resumeData]);
 
-    return metrics;
-  };
+  const { metrics, newScore } = memo;
 
-  const metrics = calculateHealthMetrics();
+  useEffect(() => {
+    if (newScore !== score) onScoreChange(newScore);
+  }, [newScore, score, onScoreChange]);
 
   const getStatusColor = (status: string) => {
     switch (status) {

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { FileText, Mail, Download, FileDown } from 'lucide-react';
-import html2pdf from 'html2pdf.js';
 import EditableResumeForm from './components/EditableResumeForm';
 import LivePreview from './components/LivePreview';
 import ATSChecker from './components/ATSChecker';
@@ -17,6 +16,7 @@ import { showToast } from './components/ToastContainer';
 
 
 function App() {
+  const GUMROAD_URL = 'https://gumroad.com/l/ai-resume-builder-template';
   const [showLandingPage, setShowLandingPage] = useState(true);
   const [resumeData, setResumeData] = useState({
     personalInfo: {
@@ -54,6 +54,7 @@ function App() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [exactMode, setExactMode] = useState(false);
+  const [loadingSave, setLoadingSave] = useState(false);
 
 
   useEffect(() => {
@@ -136,161 +137,19 @@ function App() {
     }
   };
 
-  const handleDownloadPDF = async () => {
-    const element = document.querySelector('.resume-preview-content') as HTMLElement;
-    if (!element) {
-      showToast('Please wait for the resume to load before downloading.', 'warning');
-      return;
-    }
-
-    setIsDownloading(true);
-    element.classList.add('downloading');
-
-    // Clone the element to avoid modifying the original
-    const clonedElement = element.cloneNode(true) as HTMLElement;
-    
-    // Ensure all links have proper styling and are visible
-    const links = clonedElement.querySelectorAll('a');
-    links.forEach(link => {
-      link.style.color = '#2563eb';
-      link.style.textDecoration = 'underline';
-      // Ensure href is properly formatted
-      if (link.href) {
-        if (link.href.startsWith('mailto:') || link.href.startsWith('tel:')) {
-          // mailto and tel links are already correct
-        } else if (!link.href.startsWith('http://') && !link.href.startsWith('https://')) {
-          // Ensure web links have proper protocol
-          if (link.getAttribute('href')) {
-            const href = link.getAttribute('href') || '';
-            if (!href.startsWith('http://') && !href.startsWith('https://') && !href.startsWith('mailto:') && !href.startsWith('tel:')) {
-              link.setAttribute('href', `https://${href}`);
-            }
-          }
-        }
-      }
-    });
-
-    const opt = {
-      margin: 0.5,
-      filename: `${resumeData.personalInfo.fullName || 'Resume'}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { 
-        scale: 2, 
-        useCORS: true,
-        logging: false,
-        letterRendering: true
-      },
-      jsPDF: { 
-        unit: 'in', 
-        format: 'letter', 
-        orientation: 'portrait',
-        compress: true
-      },
-      pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-    };
-
-    try {
-      // Create a temporary container for the cloned element
-      const tempContainer = document.createElement('div');
-      tempContainer.style.position = 'absolute';
-      tempContainer.style.left = '-9999px';
-      tempContainer.style.top = '0';
-      tempContainer.appendChild(clonedElement);
-      document.body.appendChild(tempContainer);
-
-      await html2pdf().set({
-        ...opt,
-        image: { type: 'jpeg' as 'jpeg', quality: 0.98 },
-        jsPDF: { ...opt.jsPDF, orientation: 'portrait' as 'portrait' }
-      }).from(clonedElement).save();
-      
-      // Clean up
-      document.body.removeChild(tempContainer);
-      
-      showToast('PDF downloaded successfully!', 'success');
-      setShowConfetti(true);
-      setTimeout(() => setShowConfetti(false), 3000);
-    } catch (error) {
-      console.error('Error generating PDF:', error);
-      showToast('Unable to generate PDF. Please try again.', 'error');
-    } finally {
-      element.classList.remove('downloading');
-      setIsDownloading(false);
-    }
+  const handleDownloadPDF = () => {
+    window.open(GUMROAD_URL, '_blank', 'noopener,noreferrer');
+    showToast('This is a demo. Purchase the template on Gumroad to unlock PDF downloads.', 'info');
   };
 
   const handleDownloadWord = () => {
-    const element = document.querySelector('.resume-preview-content') as HTMLElement;
-    if (!element) {
-      showToast('Please wait for the resume to load before downloading.', 'warning');
-      return;
-    }
-
-    setIsDownloading(true);
-    element.classList.add('downloading');
-    const clonedElement = element.cloneNode(true) as HTMLElement;
-    const atsBadges = clonedElement.querySelectorAll('.ats-badge');
-    atsBadges.forEach(badge => badge.remove());
-
-    // Ensure all links are properly formatted for Word document
-    const links = clonedElement.querySelectorAll('a');
-    links.forEach(link => {
-      link.style.color = '#2563eb';
-      link.style.textDecoration = 'underline';
-      // Ensure href is properly formatted
-      const href = link.getAttribute('href');
-      if (href) {
-        if (!href.startsWith('http://') && !href.startsWith('https://') && !href.startsWith('mailto:') && !href.startsWith('tel:')) {
-          link.setAttribute('href', `https://${href}`);
-        }
-      }
-    });
-
-    const header = `MIME-Version: 1.0\nContent-Type: multipart/related; boundary="BOUNDARY"\n\n--BOUNDARY\nContent-Type: text/html; charset="utf-8"\n\n`;
-    const footer = `\n--BOUNDARY--`;
-
-    const html = `<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <style>
-    body { font-family: Arial, sans-serif; font-size: 12pt; line-height: 1.6; }
-    p { margin: 0 0 12pt 0; }
-    a { color: #2563eb; text-decoration: underline; }
-    a[href^="mailto:"] { color: #2563eb; text-decoration: underline; }
-    a[href^="tel:"] { color: #2563eb; text-decoration: underline; }
-    a[href^="http"] { color: #2563eb; text-decoration: underline; }
-  </style>
-</head>
-<body>
-  ${clonedElement.innerHTML}
-</body>
-</html>`;
-
-    const blob = new Blob([header + html + footer], {
-      type: 'application/msword'
-    });
-
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `${resumeData.personalInfo.fullName || 'Resume'}.doc`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-    element.classList.remove('downloading');
-    
-    showToast('Word document downloaded successfully!', 'success');
-    setShowConfetti(true);
-    setTimeout(() => setShowConfetti(false), 3000);
-    setIsDownloading(false);
+    window.open(GUMROAD_URL, '_blank', 'noopener,noreferrer');
+    showToast('This is a demo. Purchase the template on Gumroad to unlock Word downloads.', 'info');
   };
 
   if (showLandingPage) {
     return (
       <>
-
         <LandingPage
           onGetStarted={handleGetStarted}
           onOpenHelp={() => setShowHelpPanel(true)}
@@ -372,43 +231,10 @@ function App() {
             <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mt-6 sm:mt-8 px-2">
             <button
               onClick={handleDownloadPDF}
-              disabled={isDownloading}
-              className="group flex items-center justify-center gap-1.5 sm:gap-2 px-4 sm:px-5 lg:px-6 py-2.5 sm:py-3 lg:py-3.5 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg sm:rounded-xl font-semibold hover:from-red-600 hover:to-red-700 transition-all shadow-lg hover:shadow-red-500/30 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base lg:text-base min-w-[120px] sm:min-w-[140px]"
+              className="group flex items-center justify-center gap-1.5 sm:gap-2 px-4 sm:px-5 lg:px-6 py-2.5 sm:py-3 lg:py-3.5 bg-gradient-to-r from-emerald-500 to-cyan-600 text-white rounded-lg sm:rounded-xl font-semibold hover:from-emerald-600 hover:to-cyan-700 transition-all shadow-lg hover:shadow-emerald-500/30 transform hover:scale-105 active:scale-95 text-sm sm:text-base lg:text-base min-w-[200px] sm:min-w-[230px]"
             >
-              {isDownloading ? (
-                <>
-                  <svg className="animate-spin w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  <span>Processing...</span>
-                </>
-              ) : (
-                <>
-                  <Download className="w-4 h-4 sm:w-5 sm:h-5 group-hover:animate-bounce" />
-                  <span>PDF</span>
-                </>
-              )}
-            </button>
-            <button
-              onClick={handleDownloadWord}
-              disabled={isDownloading}
-              className="group flex items-center justify-center gap-1.5 sm:gap-2 px-4 sm:px-5 lg:px-6 py-2.5 sm:py-3 lg:py-3.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg sm:rounded-xl font-semibold hover:from-blue-600 hover:to-blue-700 transition-all shadow-lg hover:shadow-blue-500/30 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base lg:text-base min-w-[120px] sm:min-w-[140px]"
-            >
-              {isDownloading ? (
-                <>
-                  <svg className="animate-spin w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  <span>Processing...</span>
-                </>
-              ) : (
-                <>
-                  <FileDown className="w-4 h-4 sm:w-5 sm:h-5 group-hover:animate-bounce" />
-                  <span>Word</span>
-                </>
-              )}
+              <Download className="w-4 h-4 sm:w-5 sm:h-5 group-hover:animate-bounce" />
+              <span>Purchase to download PDF / Word</span>
             </button>
             <button
               onClick={() => setShowCoverLetterBuilder(true)}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useEffect, useState } from 'react';
 import { Shield, CheckCircle, AlertTriangle, XCircle, Target, Eye, TrendingUp, Award, Lightbulb, Search, Plus, Sparkles } from 'lucide-react';
 
 interface ATSCheckerProps {
@@ -21,8 +21,8 @@ const ATSChecker: React.FC<ATSCheckerProps> = ({ resumeData, score, onScoreChang
   const [showKeywordSuggestions, setShowKeywordSuggestions] = useState(false);
   const [isApplyingImprovements, setIsApplyingImprovements] = useState(false);
 
-  const calculateATSScore = (): ATSCriteria[] => {
-    const criteria: ATSCriteria[] = [
+  const memo = useMemo(() => {
+    const c: ATSCriteria[] = [
       {
         name: 'Contact Information',
         status: resumeData?.personalInfo?.email && resumeData?.personalInfo?.phone ? 'pass' : 'fail',
@@ -82,18 +82,24 @@ const ATSChecker: React.FC<ATSCheckerProps> = ({ resumeData, score, onScoreChang
     ];
 
     // Calculate score based on criteria
-    const passCount = criteria.filter(c => c.status === 'pass').length;
-    const warningCount = criteria.filter(c => c.status === 'warning').length;
-    const newScore = Math.round((passCount * 100 + warningCount * 50) / criteria.length);
-    
-    if (newScore !== score) {
+    const passCount = c.filter(i => i.status === 'pass').length;
+    const warningCount = c.filter(i => i.status === 'warning').length;
+    const newScore = Math.round((passCount * 100 + warningCount * 50) / c.length);
+
+    // push score change AFTER render via effect (see below)
+    return { criteria: c, newScore };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resumeData]);
+
+  const { criteria, newScore } = memo;
+
+  useEffect(() => {
+    if (typeof newScore === 'number' && newScore !== score) {
       onScoreChange(newScore);
     }
-
-    return criteria;
-  };
-
-  const criteria = calculateATSScore();
+    // we intentionally depend on score and criteria to react to recomputations
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [criteria, score, onScoreChange]);
 
   const getStatusIcon = (status: string) => {
     switch (status) {

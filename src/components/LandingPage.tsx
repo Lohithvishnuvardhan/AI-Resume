@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FileText, CheckCircle, Upload, Zap, Shield, ChevronDown, ChevronUp, Star, Award, Lock, Eye, Download, Users, TrendingUp, Linkedin, Briefcase, Github, Globe, ArrowRight, Sparkles, Crown, Rocket, CheckCircle2, Quote } from 'lucide-react';
+import { FileText, CheckCircle, Upload, Zap, Shield, ChevronDown, ChevronUp, Star, Award, Lock, Eye, Download, Users, TrendingUp, Linkedin, Briefcase, Github, Globe, ArrowRight, Sparkles, Crown, Rocket, CheckCircle2, Quote, Code, GraduationCap } from 'lucide-react';
 import PolicyModal from './PolicyModal';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
@@ -15,6 +15,7 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
   const [previewSample, setPreviewSample] = useState<number | null>(null);
   const [showPolicyModal, setShowPolicyModal] = useState(false);
   const [policyType, setPolicyType] = useState<'privacy' | 'terms' | 'refund' | null>(null);
+  const GUMROAD_URL = 'https://gumroad.com/l/ai-resume-builder-template';
 
   const toggleFAQ = (index: number) => {
     setExpandedFAQ(expandedFAQ === index ? null : index);
@@ -28,96 +29,7 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
   };
 
   const handleDownloadSample = () => {
-    // Create a sample resume content
-    const sampleHTML = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="utf-8">
-        <style>
-          body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; line-height: 1.6; color: #333; }
-          h1 { color: #2563eb; font-size: 28px; margin-bottom: 5px; }
-          h2 { color: #2563eb; font-size: 20px; border-bottom: 2px solid #2563eb; padding-bottom: 5px; margin-top: 25px; }
-          h3 { font-size: 16px; margin-bottom: 5px; }
-          .contact { color: #666; font-size: 14px; margin-bottom: 20px; }
-          .section { margin-bottom: 20px; }
-          .job-title { font-weight: bold; color: #333; }
-          .company { color: #666; font-style: italic; }
-          .date { color: #888; font-size: 14px; }
-          ul { margin: 10px 0; padding-left: 20px; }
-          li { margin: 5px 0; }
-        </style>
-      </head>
-      <body>
-        <h1>John Doe</h1>
-        <div class="contact">john.doe@email.com | (555) 123-4567 | New York, NY | linkedin.com/in/johndoe</div>
-
-        <h2>Professional Summary</h2>
-        <p>Results-driven software engineer with 5+ years of experience building scalable web applications. Expertise in React, Node.js, and cloud technologies. Proven track record of delivering high-quality solutions and leading cross-functional teams.</p>
-
-        <h2>Experience</h2>
-        <div class="section">
-          <div class="job-title">Senior Software Engineer</div>
-          <div class="company">Tech Solutions Inc. | <span class="date">Jan 2021 - Present</span></div>
-          <ul>
-            <li>Led development of customer-facing web application serving 100K+ users</li>
-            <li>Improved application performance by 40% through code optimization</li>
-            <li>Mentored junior developers and conducted code reviews</li>
-            <li>Implemented CI/CD pipeline reducing deployment time by 60%</li>
-          </ul>
-        </div>
-
-        <div class="section">
-          <div class="job-title">Software Engineer</div>
-          <div class="company">Digital Innovations LLC | <span class="date">Jun 2019 - Dec 2020</span></div>
-          <ul>
-            <li>Developed and maintained RESTful APIs using Node.js and Express</li>
-            <li>Built responsive user interfaces with React and Material-UI</li>
-            <li>Collaborated with product team to define technical requirements</li>
-            <li>Reduced bug count by 30% through comprehensive testing</li>
-          </ul>
-        </div>
-
-        <h2>Education</h2>
-        <div class="section">
-          <div class="job-title">Bachelor of Science in Computer Science</div>
-          <div class="company">University of Technology | <span class="date">2015 - 2019</span></div>
-          <p>GPA: 3.8/4.0 | Dean's List: All Semesters</p>
-        </div>
-
-        <h2>Skills</h2>
-        <ul>
-          <li><strong>Languages:</strong> JavaScript, TypeScript, Python, Java</li>
-          <li><strong>Frontend:</strong> React, Vue.js, HTML5, CSS3, Tailwind CSS</li>
-          <li><strong>Backend:</strong> Node.js, Express, Django, REST APIs</li>
-          <li><strong>Database:</strong> PostgreSQL, MongoDB, Redis</li>
-          <li><strong>Tools:</strong> Git, Docker, AWS, CI/CD, Agile/Scrum</li>
-        </ul>
-
-        <h2>Projects</h2>
-        <div class="section">
-          <h3>E-commerce Platform</h3>
-          <p>Built full-stack e-commerce solution with React and Node.js, integrated Stripe payment processing, and implemented real-time inventory management.</p>
-        </div>
-
-        <div class="section">
-          <h3>Task Management App</h3>
-          <p>Developed collaborative task management application with real-time updates using WebSockets, serving 1000+ active users.</p>
-        </div>
-      </body>
-      </html>
-    `;
-
-    // Create blob and download
-    const blob = new Blob([sampleHTML], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'Sample_Resume_Professional.html';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+    alert('This is a preview-only demo. Downloadable files are available after you purchase the template on Gumroad.');
   };
 
   return (
@@ -188,10 +100,10 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
                 License
               </button>
               <button onClick={() => scrollToSection('samples')} className="text-gray-300 hover:text-blue-400 transition-colors font-medium text-sm lg:text-base">
-                Samples
+                Demo
               </button>
-              <button onClick={() => scrollToSection('pricing')} className="text-gray-300 hover:text-blue-400 transition-colors font-medium text-sm lg:text-base">
-                Pricing
+              <button onClick={() => scrollToSection('how-it-works')} className="text-gray-300 hover:text-blue-400 transition-colors font-medium text-sm lg:text-base">
+                How it works
               </button>
               <button onClick={() => scrollToSection('faq')} className="text-gray-300 hover:text-blue-400 transition-colors font-medium text-sm lg:text-base">
                 FAQ
@@ -243,7 +155,7 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
         </div>
       </nav>
 
-      {/* Hero Section */}
+      {/* Hero Section – Template Demo */}
       <section className="pt-20 sm:pt-24 lg:pt-32 pb-12 sm:pb-16 lg:pb-20 px-3 sm:px-4 lg:px-6 relative overflow-hidden" style={{ contentVisibility: 'auto', containIntrinsicSize: '600px' }}>
         {/* Video Background */}
         <div className="absolute inset-0 w-full h-full z-0">
@@ -269,26 +181,26 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
               </span>
-              <span className="text-sm font-semibold text-blue-400">1M+ Professionals Trust Us</span>
+              <span className="text-sm font-semibold text-blue-400">Gumroad-ready SaaS template demo</span>
             </div>
           </div>
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight animate-fade-in-up px-2 drop-shadow-2xl" style={{fontFamily: 'Playfair Display, Georgia, serif', textShadow: '0 4px 20px rgba(0, 0, 0, 0.8), 0 2px 10px rgba(0, 0, 0, 0.6)'}}>
-            Create Your Perfect Resume
+            AI Resume Builder Website Template
             <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-teal-400 mt-2 animate-gradient" style={{textShadow: '0 4px 20px rgba(0, 0, 0, 0.8)'}}>
-              In Minutes, Not Hours
+              A modern resume builder you can sell, customize, or launch as your own SaaS
             </span>
           </h1>
-          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-100 mb-6 sm:mb-8 lg:mb-10 max-w-3xl mx-auto leading-relaxed font-light px-4 drop-shadow-lg" style={{textShadow: '0 2px 10px rgba(0, 0, 0, 0.7)'}}>
-            AI-powered resume builder with professional templates, ATS optimization, and expert guidance to help you land your dream job.
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-100 mb-6 sm:mb-7 lg:mb-8 max-w-3xl mx-auto leading-relaxed font-light px-4 drop-shadow-lg" style={{textShadow: '0 2px 10px rgba(0, 0, 0, 0.7)'}}>
+            This is the live demo of a premium resume builder website template — perfect for Gumroad sellers and Product Hunt launches. No backend required, 100% front-end code included after purchase.
           </p>
 
-          <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 mb-8 sm:mb-10 lg:mb-12 px-3">
+          <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 mb-3 sm:mb-4 lg:mb-6 px-3">
             <button
-              onClick={() => onGetStarted()}
-              className="group px-6 sm:px-8 lg:px-10 py-3 sm:py-4 lg:py-5 bg-gradient-to-r from-blue-600 to-cyan-600 text-white text-base sm:text-lg lg:text-xl rounded-xl sm:rounded-2xl font-bold hover:from-blue-700 hover:to-cyan-700 transition-all shadow-2xl hover:shadow-blue-500/50 transform hover:scale-105 relative overflow-hidden"
+              onClick={() => window.open(GUMROAD_URL, '_blank', 'noopener,noreferrer')}
+              className="group px-6 sm:px-8 lg:px-10 py-3 sm:py-4 lg:py-5 bg-gradient-to-r from-emerald-500 to-cyan-600 text-white text-base sm:text-lg lg:text-xl rounded-xl sm:rounded-2xl font-bold hover:from-emerald-600 hover:to-cyan-700 transition-all shadow-2xl hover:shadow-emerald-500/40 transform hover:scale-105 relative overflow-hidden"
             >
               <span className="relative z-10 flex items-center justify-center gap-2">
-                Create Resume Now
+                Buy Template (Gumroad)
                 <svg className="w-6 h-6 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
@@ -296,103 +208,123 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
               <div className="absolute inset-0 bg-gradient-to-r from-cyan-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </button>
             <button
-              onClick={() => scrollToSection('samples')}
+              onClick={() => onGetStarted()}
               className="px-6 sm:px-8 lg:px-10 py-3 sm:py-4 lg:py-5 border-2 border-blue-500/50 bg-blue-500/10 backdrop-blur-sm text-blue-400 text-base sm:text-lg lg:text-xl rounded-xl sm:rounded-2xl font-bold hover:bg-blue-500/20 hover:border-blue-400 transition-all shadow-lg hover:shadow-blue-500/20"
             >
-              View Sample Resume
+              Live Demo Preview
             </button>
           </div>
 
-          {/* Trust Badges */}
+          <p className="text-xs sm:text-sm text-gray-200 mb-6 sm:mb-8">
+            No login required • Easy to customize • Developer-friendly
+          </p>
+
+          {/* Trust bullets for template */}
           <div className="flex flex-wrap justify-center gap-3 sm:gap-4 lg:gap-8 text-xs sm:text-sm text-gray-100 px-2 drop-shadow-md">
             <div className="flex items-center gap-2">
-              <CheckCircle className="w-5 h-5 text-green-600" />
-              <span className="font-medium">ATS Optimized</span>
+              <CheckCircle className="w-5 h-5 text-emerald-500" />
+              <span className="font-medium">Clean modern SaaS UI</span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle className="w-5 h-5 text-green-600" />
-              <span className="font-medium">1M+ Users</span>
+              <CheckCircle className="w-5 h-5 text-emerald-500" />
+              <span className="font-medium">No backend or database needed</span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle className="w-5 h-5 text-green-600" />
-              <span className="font-medium">AI-Powered</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle className="w-5 h-5 text-green-600" />
-              <span className="font-medium">Money Back Guarantee</span>
+              <CheckCircle className="w-5 h-5 text-emerald-500" />
+              <span className="font-medium">Perfect for Gumroad & Product Hunt</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* How It Works Section */}
+      {/* Features Section */}
       <section id="features" className="py-12 sm:py-16 lg:py-20 bg-gray-900/30 backdrop-blur-0 sm:backdrop-blur-sm relative z-10" style={{ contentVisibility: 'auto', containIntrinsicSize: '800px' }}>
         <div className="max-w-6xl mx-auto px-3 sm:px-4 lg:px-6">
           <div className="text-center mb-8 sm:mb-12 lg:mb-16">
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-teal-300 mb-3 sm:mb-4 px-2" style={{fontFamily: 'Playfair Display, Georgia, serif'}}>
-              How It Works
+              Template Features
             </h2>
-            <p className="text-base sm:text-lg lg:text-xl text-gray-400 max-w-2xl mx-auto px-4">Three simple steps to your perfect resume</p>
+            <p className="text-base sm:text-lg lg:text-xl text-gray-400 max-w-2xl mx-auto px-4">
+              Everything you need to launch a polished resume builder as your own product — no backend or design team required.
+            </p>
           </div>
           <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-            <div className="group text-center p-5 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-500 bg-gradient-to-br from-blue-900/40 to-cyan-900/40 border border-blue-800/30 hover:border-blue-600/50 backdrop-blur-sm transform hover:-translate-y-2 will-change-transform gpu-accelerated">
+            <div className="group text-left p-5 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-500 bg-gradient-to-br from-blue-900/40 to-cyan-900/40 border border-blue-800/30 hover:border-blue-600/50 backdrop-blur-sm transform hover:-translate-y-2 will-change-transform gpu-accelerated">
               <div className="relative inline-block mb-4 sm:mb-6">
                 <div className="absolute inset-0 bg-blue-600 rounded-full blur-xl opacity-50 group-hover:opacity-75 transition-opacity"></div>
-                <div className="relative w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-blue-600 to-cyan-600 rounded-2xl flex items-center justify-center shadow-xl">
-                  <Upload className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
+                <div className="relative w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-600 to-cyan-600 rounded-2xl flex items-center justify-center shadow-xl">
+                  <Zap className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
                 </div>
-                <div className="absolute -top-2 -right-2 w-7 h-7 sm:w-8 sm:h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-xs sm:text-sm shadow-lg">1</div>
               </div>
-              <h3 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">Upload or Start Fresh</h3>
-              <p className="text-sm sm:text-base text-gray-300 mb-4 sm:mb-6 leading-relaxed">
-                Upload your existing resume or start from scratch with our guided templates.
+              <h3 className="text-lg sm:text-xl font-bold text-white mb-3">Clean modern UI</h3>
+              <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
+                Premium SaaS-style layout with glassmorphism, gradients, and responsive spacing that feels at home on Product Hunt.
               </p>
-              <button
-                onClick={() => onGetStarted()}
-                className="text-blue-400 font-semibold hover:text-blue-300 transition-colors flex items-center gap-2 mx-auto text-sm sm:text-base"
-              >
-                Try This Step →
-              </button>
             </div>
 
-            <div className="group text-center p-5 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl hover:shadow-2xl hover:shadow-cyan-500/20 transition-all duration-500 bg-gradient-to-br from-cyan-900/40 to-teal-900/40 border border-cyan-800/30 hover:border-cyan-600/50 backdrop-blur-sm transform hover:-translate-y-2 will-change-transform gpu-accelerated">
+            <div className="group text-left p-5 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl hover:shadow-2xl hover:shadow-emerald-500/20 transition-all duration-500 bg-gradient-to-br from-emerald-900/40 to-teal-900/40 border border-emerald-800/40 hover:border-emerald-500/70 backdrop-blur-sm transform hover:-translate-y-2 will-change-transform gpu-accelerated">
+              <div className="relative inline-block mb-4 sm:mb-6">
+                <div className="absolute inset-0 bg-emerald-600 rounded-full blur-xl opacity-50 group-hover:opacity-75 transition-opacity"></div>
+                <div className="relative w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-2xl flex items-center justify-center shadow-xl">
+                  <FileText className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
+                </div>
+              </div>
+              <h3 className="text-lg sm:text-xl font-bold text-white mb-3">AI-ready resume structure</h3>
+              <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
+                Thoughtful sections and layout ready for AI enhancements, ATS scoring, or custom logic you add later.
+              </p>
+            </div>
+
+            <div className="group text-left p-5 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl hover:shadow-2xl hover:shadow-cyan-500/20 transition-all duration-500 bg-gradient-to-br from-cyan-900/40 to-slate-900/40 border border-cyan-800/30 hover:border-cyan-600/60 backdrop-blur-sm transform hover:-translate-y-2 will-change-transform gpu-accelerated">
               <div className="relative inline-block mb-4 sm:mb-6">
                 <div className="absolute inset-0 bg-cyan-600 rounded-full blur-xl opacity-50 group-hover:opacity-75 transition-opacity"></div>
-                <div className="relative w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-cyan-600 to-teal-600 rounded-2xl flex items-center justify-center shadow-xl">
-                  <Zap className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
+                <div className="relative w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-2xl flex items-center justify-center shadow-xl">
+                  <Upload className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
                 </div>
-                <div className="absolute -top-2 -right-2 w-7 h-7 sm:w-8 sm:h-8 bg-cyan-500 rounded-full flex items-center justify-center text-white font-bold text-xs sm:text-sm shadow-lg">2</div>
               </div>
-              <h3 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">AI Optimizes Content</h3>
-              <p className="text-sm sm:text-base text-gray-300 mb-4 sm:mb-6 leading-relaxed">
-                Our AI analyzes and enhances your resume for maximum impact and ATS compatibility.
+              <h3 className="text-lg sm:text-xl font-bold text-white mb-3">Fully responsive</h3>
+              <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
+                Looks sharp on mobile, tablet, and desktop with carefully tuned breakpoints and spacing.
               </p>
-              <button
-                onClick={() => onGetStarted()}
-                className="text-cyan-400 font-semibold hover:text-cyan-300 transition-colors flex items-center gap-2 mx-auto text-sm sm:text-base"
-              >
-                Try This Step →
-              </button>
             </div>
 
-            <div className="group text-center p-5 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl hover:shadow-2xl hover:shadow-teal-500/20 transition-all duration-500 bg-gradient-to-br from-teal-900/40 to-green-900/40 border border-teal-800/30 hover:border-teal-600/50 backdrop-blur-sm transform hover:-translate-y-2 will-change-transform gpu-accelerated">
+            <div className="group text-left p-5 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-500 bg-gradient-to-br from-slate-900/50 to-gray-900/70 border border-purple-800/40 hover:border-purple-500/70 backdrop-blur-sm transform hover:-translate-y-2 will-change-transform gpu-accelerated">
               <div className="relative inline-block mb-4 sm:mb-6">
-                <div className="absolute inset-0 bg-teal-600 rounded-full blur-xl opacity-50 group-hover:opacity-75 transition-opacity"></div>
-                <div className="relative w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-teal-600 to-green-600 rounded-2xl flex items-center justify-center shadow-xl">
-                  <FileText className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
+                <div className="absolute inset-0 bg-purple-600 rounded-full blur-xl opacity-50 group-hover:opacity-75 transition-opacity"></div>
+                <div className="relative w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-xl">
+                  <Code className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
                 </div>
-                <div className="absolute -top-2 -right-2 w-7 h-7 sm:w-8 sm:h-8 bg-teal-500 rounded-full flex items-center justify-center text-white font-bold text-xs sm:text-sm shadow-lg">3</div>
               </div>
-              <h3 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">Download & Apply</h3>
-              <p className="text-sm sm:text-base text-gray-300 mb-4 sm:mb-6 leading-relaxed">
-                Download your professional resume in PDF or Word format and start applying!
+              <h3 className="text-lg sm:text-xl font-bold text-white mb-3">Easy to customize</h3>
+              <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
+                Clean React + Tailwind codebase — swap colors, fonts, sections, and copy in minutes (HTML/CSS/JS friendly).
               </p>
-              <button
-                onClick={() => onGetStarted()}
-                className="text-teal-400 font-semibold hover:text-teal-300 transition-colors flex items-center gap-2 mx-auto text-sm sm:text-base"
-              >
-                Try This Step →
-              </button>
+            </div>
+
+            <div className="group text-left p-5 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl hover:shadow-2xl hover:shadow-amber-500/20 transition-all duration-500 bg-gradient-to-br from-amber-900/40 to-slate-900/60 border border-amber-700/40 hover:border-amber-500/70 backdrop-blur-sm transform hover:-translate-y-2 will-change-transform gpu-accelerated">
+              <div className="relative inline-block mb-4 sm:mb-6">
+                <div className="absolute inset-0 bg-amber-500 rounded-full blur-xl opacity-50 group-hover:opacity-75 transition-opacity"></div>
+                <div className="relative w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center shadow-xl">
+                  <Users className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
+                </div>
+              </div>
+              <h3 className="text-lg sm:text-xl font-bold text-white mb-3">Perfect for Gumroad / SaaS / freelancers</h3>
+              <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
+                Sell it as a standalone product, bundle it with services, or run it as your own mini SaaS.
+              </p>
+            </div>
+
+            <div className="group text-left p-5 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl hover:shadow-2xl hover:shadow-teal-500/20 transition-all duration-500 bg-gradient-to-br from-teal-900/40 to-emerald-900/60 border border-teal-700/40 hover:border-teal-500/70 backdrop-blur-sm transform hover:-translate-y-2 will-change-transform gpu-accelerated">
+              <div className="relative inline-block mb-4 sm:mb-6">
+                <div className="absolute inset-0 bg-teal-500 rounded-full blur-xl opacity-50 group-hover:opacity-75 transition-opacity"></div>
+                <div className="relative w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-teal-400 to-emerald-500 rounded-2xl flex items-center justify-center shadow-xl">
+                  <Shield className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
+                </div>
+              </div>
+              <h3 className="text-lg sm:text-xl font-bold text-white mb-3">No backend required</h3>
+              <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
+                Pure front-end template — host on Netlify, Vercel, or any static host without worrying about servers.
+              </p>
             </div>
           </div>
         </div>
@@ -534,11 +466,11 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
 
           <div className="text-center">
             <button
-              onClick={handleDownloadSample}
+              onClick={() => onGetStarted()}
               className="px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 text-white text-lg rounded-xl font-bold hover:from-blue-700 hover:to-cyan-700 transition-all shadow-xl hover:shadow-2xl transform hover:scale-105 inline-flex items-center gap-2"
             >
               <Download className="w-5 h-5" />
-              Download Sample Resume (Free)
+              View Live Resume Demo (Preview Only)
             </button>
           </div>
         </div>
@@ -761,139 +693,42 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
         </div>
       </section>
 
-      {/* Pricing Section */}
-      <section id="pricing" className="py-16 sm:py-20 lg:py-24 bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900 relative z-10">
+      {/* Who is this for Section */}
+      <section id="who-is-this-for" className="py-16 sm:py-20 lg:py-24 bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900 relative z-10">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
-          <div className="text-center mb-12 sm:mb-16">
-            <div className="inline-block mb-4">
-              <span className="px-4 py-2 bg-gradient-to-r from-yellow-600/20 to-orange-600/20 border border-yellow-500/30 rounded-full text-yellow-400 text-sm font-semibold backdrop-blur-sm">
-                Choose Your Plan
-              </span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-300 to-orange-200 mb-4 sm:mb-6 px-2" style={{fontFamily: 'Playfair Display, Georgia, serif'}}>
-              Simple, Transparent Pricing
+          <div className="text-center mb-10 sm:mb-14">
+            <span className="inline-flex items-center px-4 py-2 rounded-full text-xs sm:text-sm font-semibold bg-blue-500/10 border border-blue-500/30 text-blue-300 mb-4 backdrop-blur-sm">
+              Built for modern creators
+            </span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-cyan-300 to-teal-200 mb-3 sm:mb-4 px-2" style={{fontFamily: 'Playfair Display, Georgia, serif'}}>
+              Who is this template for?
             </h2>
-            <p className="text-base sm:text-lg lg:text-xl text-gray-300 max-w-3xl mx-auto px-4">
-              Start free, upgrade when you're ready. All plans include our core features.
+            <p className="text-base sm:text-lg text-gray-300 max-w-3xl mx-auto px-4">
+              Ideal if you want to launch a resume builder quickly without rebuilding UI, layout, and conversion-focused landing from scratch.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6 lg:gap-8 mb-12">
-            {/* Free Plan */}
-            <div className="group relative">
-              <div className="absolute -inset-1 bg-gradient-to-r from-gray-600 to-gray-700 rounded-2xl blur opacity-20 group-hover:opacity-30 transition-opacity"></div>
-              <div className="relative bg-gradient-to-br from-gray-800/90 to-gray-900/90 rounded-2xl p-6 sm:p-8 border border-gray-700/50 backdrop-blur-sm h-full flex flex-col">
-                <div className="mb-6">
-                  <h3 className="text-2xl font-bold text-white mb-2">Free</h3>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-4xl font-bold text-white">$0</span>
-                    <span className="text-gray-400">/forever</span>
-                  </div>
-                  <p className="text-gray-400 text-sm mt-2">Perfect for getting started</p>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6 lg:gap-7">
+            {[
+              { label: 'Developers', description: 'Ship a polished app UI without touching Figma.', icon: Code },
+              { label: 'Indie hackers', description: 'Validate a SaaS idea fast and sell on Gumroad.', icon: Rocket },
+              { label: 'Students', description: 'Launch a portfolio-worthy project in days.', icon: GraduationCap },
+              { label: 'Freelancers', description: 'Offer a “done-for-you” resume builder to clients.', icon: Briefcase },
+              { label: 'Startup founders', description: 'Test hiring tools or HR products with a real demo.', icon: Users }
+            ].map((item, idx) => (
+              <div
+                key={idx}
+                className="group bg-gradient-to-br from-slate-900/70 to-gray-900/80 border border-slate-700/60 rounded-2xl p-4 sm:p-5 lg:p-6 hover:border-emerald-500/70 hover:shadow-xl hover:shadow-emerald-500/20 transition-all duration-300 flex flex-col items-start gap-3"
+              >
+                <div className="inline-flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-emerald-500 to-cyan-500 text-white shadow-lg">
+                  <item.icon className="w-5 h-5" />
                 </div>
-                <ul className="space-y-3 mb-8 flex-grow">
-                  {['1 Resume Template', 'Basic AI Suggestions', 'PDF Download', 'Community Support', 'ATS Basic Check'].map((feature, i) => (
-                    <li key={i} className="flex items-center gap-3">
-                      <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0" />
-                      <span className="text-gray-300">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                <button
-                  onClick={() => onGetStarted()}
-                  className="w-full py-3 px-6 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-semibold transition-all"
-                >
-                  Get Started
-                </button>
+                <div>
+                  <h3 className="text-base sm:text-lg font-semibold text-white mb-1">{item.label}</h3>
+                  <p className="text-xs sm:text-sm text-gray-300 leading-relaxed">{item.description}</p>
+                </div>
               </div>
-            </div>
-
-            {/* Pro Plan - Featured */}
-            <div className="group relative">
-              <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-2xl blur opacity-40 group-hover:opacity-60 transition-opacity"></div>
-              <div className="relative bg-gradient-to-br from-blue-900/90 to-cyan-900/90 rounded-2xl p-6 sm:p-8 border-2 border-blue-500/50 backdrop-blur-sm h-full flex flex-col">
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <span className="px-4 py-1 bg-gradient-to-r from-blue-600 to-cyan-600 text-white text-sm font-bold rounded-full shadow-lg">
-                    MOST POPULAR
-                  </span>
-                </div>
-                <div className="mb-6 mt-2">
-                  <h3 className="text-2xl font-bold text-white mb-2 flex items-center gap-2">
-                    Pro
-                    <Crown className="w-5 h-5 text-yellow-400" />
-                  </h3>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-4xl font-bold text-white">$9</span>
-                    <span className="text-gray-300">/month</span>
-                  </div>
-                  <p className="text-gray-300 text-sm mt-2">For professionals who want more</p>
-                </div>
-                <ul className="space-y-3 mb-8 flex-grow">
-                  {['50+ Premium Templates', 'Advanced AI Optimization', 'Unlimited Downloads', 'Priority Support', 'ATS Advanced Scoring', 'Cover Letter Builder', 'Multiple Formats (PDF/Word)', 'Resume Analytics'].map((feature, i) => (
-                    <li key={i} className="flex items-center gap-3">
-                      <CheckCircle2 className="w-5 h-5 text-cyan-400 flex-shrink-0" />
-                      <span className="text-white font-medium">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                <button
-                  onClick={() => onGetStarted()}
-                  className="w-full py-3 px-6 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-lg font-bold transition-all shadow-xl transform hover:scale-105"
-                >
-                  Start Pro Trial
-                </button>
-              </div>
-            </div>
-
-            {/* Premium Plan */}
-            <div className="group relative">
-              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl blur opacity-30 group-hover:opacity-50 transition-opacity"></div>
-              <div className="relative bg-gradient-to-br from-gray-800/90 to-gray-900/90 rounded-2xl p-6 sm:p-8 border border-purple-500/30 backdrop-blur-sm h-full flex flex-col">
-                <div className="mb-6">
-                  <h3 className="text-2xl font-bold text-white mb-2 flex items-center gap-2">
-                    Premium
-                    <Sparkles className="w-5 h-5 text-yellow-400" />
-                  </h3>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-4xl font-bold text-white">$29</span>
-                    <span className="text-gray-400">/month</span>
-                  </div>
-                  <p className="text-gray-400 text-sm mt-2">For career changers & executives</p>
-                </div>
-                <ul className="space-y-3 mb-8 flex-grow">
-                  {['Everything in Pro', '1-on-1 Expert Review', 'LinkedIn Profile Optimization', 'Interview Preparation', 'Career Coaching Session', 'Unlimited Revisions', 'Custom Branding', 'Job Application Tracker', '24/7 Priority Support'].map((feature, i) => (
-                    <li key={i} className="flex items-center gap-3">
-                      <CheckCircle2 className="w-5 h-5 text-purple-400 flex-shrink-0" />
-                      <span className="text-gray-300">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                <button
-                  onClick={() => onGetStarted()}
-                  className="w-full py-3 px-6 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg font-bold transition-all shadow-xl transform hover:scale-105"
-                >
-                  Start Premium
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div className="text-center">
-            <p className="text-gray-400 text-sm mb-4">All plans include 30-day money-back guarantee</p>
-            <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-500">
-              <span className="flex items-center gap-2">
-                <Shield className="w-4 h-4" />
-                Secure Payment
-              </span>
-              <span className="flex items-center gap-2">
-                <Lock className="w-4 h-4" />
-                Cancel Anytime
-              </span>
-              <span className="flex items-center gap-2">
-                <Award className="w-4 h-4" />
-                Money Back Guarantee
-              </span>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -904,15 +739,34 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
           <div className="text-center mb-12 sm:mb-16">
             <div className="inline-block mb-4">
               <span className="px-4 py-2 bg-gradient-to-r from-green-600/20 to-emerald-600/20 border border-green-500/30 rounded-full text-green-400 text-sm font-semibold backdrop-blur-sm">
-                Success Stories
+                Social Proof (Demo Data)
               </span>
             </div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-green-300 to-teal-200 mb-4 sm:mb-6 px-2" style={{fontFamily: 'Playfair Display, Georgia, serif'}}>
-              Trusted by 1M+ Professionals
+              Built to look proven out of the box
             </h2>
             <p className="text-base sm:text-lg lg:text-xl text-gray-300 max-w-3xl mx-auto px-4">
-              See how ResumeAI Pro has helped thousands land their dream jobs
+              The numbers and quotes below are safe demo placeholders — use them as-is or swap with your own creator metrics.
             </p>
+          </div>
+
+          {/* Lightweight social proof row requested */}
+          <div className="grid md:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-10 sm:mb-14">
+            {[
+              'Used by 100+ creators',
+              'Perfect Gumroad product',
+              'High converting demo template'
+            ].map((label, idx) => (
+              <div
+                key={idx}
+                className="bg-gradient-to-br from-gray-900/90 to-slate-900/90 border border-emerald-600/40 rounded-2xl p-4 sm:p-5 text-center shadow-lg shadow-emerald-500/10"
+              >
+                <p className="text-sm sm:text-base font-semibold text-emerald-300 tracking-wide">{label}</p>
+                <p className="mt-2 text-[11px] sm:text-xs text-gray-400 uppercase">
+                  Placeholder stats — customize for your launch
+                </p>
+              </div>
+            ))}
           </div>
 
           <div className="grid md:grid-cols-3 gap-6 lg:gap-8 mb-12">
@@ -987,7 +841,81 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
         </div>
       </section>
 
-      {/* Integrations Section */}
+      {/* How It Works Section (Template Setup) */}
+      <section id="how-it-works" className="py-16 sm:py-20 lg:py-24 bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900 relative z-10">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
+          <div className="text-center mb-12 sm:mb-16">
+            <div className="inline-block mb-4">
+              <span className="px-4 py-2 bg-gradient-to-r from-indigo-600/20 to-purple-600/20 border border-indigo-500/30 rounded-full text-indigo-300 text-sm font-semibold backdrop-blur-sm">
+                Launch in 5 simple steps
+              </span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-200 mb-4 sm:mb-6 px-2" style={{fontFamily: 'Playfair Display, Georgia, serif'}}>
+              How this template works
+            </h2>
+            <p className="text-base sm:text-lg lg:text-xl text-gray-300 max-w-3xl mx-auto px-4">
+              Go from zero to a market-ready resume builder in an afternoon — without building the UI or flows from scratch.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-5 gap-4 sm:gap-6 lg:gap-8">
+            {[
+              {
+                step: '1',
+                title: 'Buy template on Gumroad',
+                description: 'Secure checkout handles licensing and delivery for you. One-time payment, lifetime access.'
+              },
+              {
+                step: '2',
+                title: 'Download source code',
+                description: 'Get the full React + Tailwind project with all components, pages, and styling included.'
+              },
+              {
+                step: '3',
+                title: 'Customize text & styles',
+                description: 'Update copy, branding, and colors to match your niche or client base in minutes.'
+              },
+              {
+                step: '4',
+                title: 'Host on Netlify / Vercel',
+                description: 'Deploy as a static site or SPA — no backend, database, or auth required for this demo.'
+              },
+              {
+                step: '5',
+                title: 'Start selling or using',
+                description: 'Attach your Gumroad link, Stripe checkout, or just use it as a polished personal tool.'
+              }
+            ].map((item, idx) => (
+              <div
+                key={idx}
+                className="relative bg-gradient-to-br from-gray-900/90 to-slate-900/90 border border-indigo-600/40 rounded-2xl p-4 sm:p-5 lg:p-6 flex flex-col gap-3 shadow-lg shadow-indigo-500/15"
+              >
+                <div className="inline-flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 text-white text-sm sm:text-base font-bold mb-1">
+                  {item.step}
+                </div>
+                <h3 className="text-sm sm:text-base lg:text-lg font-semibold text-white">
+                  {item.title}
+                </h3>
+                <p className="text-xs sm:text-sm text-gray-300 leading-relaxed">
+                  {item.description}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-10 sm:mt-12 text-center">
+            <button
+              onClick={() => window.open(GUMROAD_URL, '_blank', 'noopener,noreferrer')}
+              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold text-sm sm:text-base shadow-xl hover:shadow-2xl hover:from-indigo-600 hover:to-purple-700 transform hover:scale-105 transition-all"
+            >
+              <Sparkles className="w-4 h-4" />
+              Buy template & follow these steps
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Integrations Section (kept as optional demo copy) */}
       <section className="py-16 sm:py-20 lg:py-24 bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900 relative z-10">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
           <div className="text-center mb-12 sm:mb-16">
@@ -1194,19 +1122,22 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
         <div className="max-w-6xl mx-auto px-3 sm:px-4 lg:px-6">
           <div className="text-center mb-8 sm:mb-10 lg:mb-12">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-cyan-300 to-teal-200 mb-3 sm:mb-4 px-2">
-              Ready to Land Your Dream Job?
+              This is a demo version of the template
             </h2>
             <p className="text-base sm:text-lg lg:text-xl text-gray-300 mb-6 sm:mb-8 px-4">
-              Join 1M+ professionals who built their careers with ResumeAI Pro
+              The full source code, PDF / Word export, and all assets are available after purchase on Gumroad.
             </p>
             <button
-              onClick={() => onGetStarted?.()}
+              onClick={() => window.open(GUMROAD_URL, '_blank', 'noopener,noreferrer')}
               className="px-6 py-3 sm:px-8 sm:py-4 lg:px-10 lg:py-5 bg-gradient-to-r from-blue-600 to-cyan-600 text-white text-base sm:text-lg lg:text-xl rounded-lg sm:rounded-xl font-bold hover:from-blue-700 hover:to-cyan-700 transition-all shadow-2xl hover:shadow-3xl transform hover:scale-105 inline-flex items-center gap-2"
             >
-              <span className="hidden sm:inline">Start Building Your Resume Now</span>
-              <span className="sm:hidden">Create Resume Now</span>
+              <span className="hidden sm:inline">Buy Template on Gumroad</span>
+              <span className="sm:hidden">Buy Template</span>
               <span>→</span>
             </button>
+            <p className="mt-4 text-xs sm:text-sm text-gray-400">
+              Download available after purchase • Built for Gumroad sellers • Front-end only, no backend included
+            </p>
           </div>
 
           {/* Trust Icons */}
@@ -1252,7 +1183,7 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
                 </div>
               </div>
               <p className="text-gray-400 text-sm">
-                Professional AI-powered resume builder trusted by millions.
+                Premium front-end resume builder template optimized for Gumroad and Product Hunt launches.
               </p>
             </div>
             <div>
@@ -1281,7 +1212,7 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
           </div>
 
           <div className="pt-8 border-t border-gray-800 text-center text-gray-400 text-sm">
-            <p>&copy; 2025 ResumeAI Pro. All rights reserved.</p>
+            <p>&copy; 2025 ResumeAI Pro Template Demo. This is a non-functional preview; production use requires purchase.</p>
           </div>
         </div>
       </footer>
@@ -1289,11 +1220,11 @@ export default function LandingPage({ onGetStarted, onOpenHelp, onOpenContact }:
       {/* Sticky Mobile CTA */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-gradient-to-r from-blue-600 to-cyan-600 px-3 py-3 shadow-lg sm:shadow-2xl z-50 border-t border-blue-500/50 backdrop-blur-0 sm:backdrop-blur-sm">
         <button
-          onClick={() => onGetStarted?.()}
+          onClick={() => window.open(GUMROAD_URL, '_blank', 'noopener,noreferrer')}
           className="w-full py-3 bg-white text-blue-600 rounded-lg font-bold text-base hover:bg-blue-50 transition-all flex items-center justify-center gap-2 shadow-lg active:scale-95"
         >
           <Zap className="w-5 h-5" />
-          Create Resume Now
+          Buy Template (Gumroad)
         </button>
       </div>
 

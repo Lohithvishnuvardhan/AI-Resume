@@ -373,13 +373,13 @@ const LivePreview: React.FC<LivePreviewProps> = ({ resumeData, template, templat
   const getProficiencyColor = (proficiency?: string) => {
     switch (proficiency) {
       case 'Expert':
-        return 'bg-green-100 text-green-800 border-green-300';
+        return 'text-green-800 border-green-300';
       case 'Intermediate':
-        return 'bg-blue-100 text-blue-800 border-blue-300';
+        return 'text-blue-800 border-blue-300';
       case 'Beginner':
-        return 'bg-gray-100 text-gray-800 border-gray-300';
+        return 'text-gray-800 border-gray-300';
       default:
-        return textStyles.skills;
+        return 'text-gray-900 border-gray-300';
     }
   };
 
@@ -536,7 +536,7 @@ const LivePreview: React.FC<LivePreviewProps> = ({ resumeData, template, templat
               </h2>
               <div className="space-y-4">
                 {resumeData.projects.map((project, index) => (
-                  <div key={index} className={`p-4 rounded-lg border-l-4 ${currentScheme.border} bg-gray-50`}>
+                  <div key={index} className={`p-4 rounded-lg border-l-4 ${currentScheme.border}`}>
                     <h3 className={`font-bold text-gray-900`}>{project.title}</h3>
                     <p className="text-gray-900 text-sm mt-1">{project.description}</p>
                   </div>
@@ -770,7 +770,12 @@ const LivePreview: React.FC<LivePreviewProps> = ({ resumeData, template, templat
 
       <div className="w-full overflow-x-auto">
       {exactMode && resumeData.rawText ? (
-        <div className="resume-preview-content p-6 sm:p-8 lg:p-10 bg-white transform transition-all duration-300 min-w-[320px] shadow-lg rounded-lg" style={{margin: '0 auto', maxWidth: '210mm'}}>
+        <div className="resume-preview-content relative p-6 sm:p-8 lg:p-10 bg-white transform transition-all duration-300 min-w-[320px] shadow-lg rounded-lg" style={{margin: '0 auto', maxWidth: '210mm'}}>
+          <div className="pointer-events-none select-none absolute top-4 right-4 z-20">
+            <span className="px-3 py-1.5 rounded-full border border-dashed border-gray-400/70 bg-white/80 text-[10px] sm:text-xs font-semibold tracking-wide text-gray-500 uppercase">
+              Preview Only – Download after Purchase
+            </span>
+          </div>
           {parseRawSections(resumeData.rawText).map((sec, idx) => (
             <div key={idx} className="mb-6">
               <div className="flex items-center justify-between mb-3">
@@ -784,11 +789,16 @@ const LivePreview: React.FC<LivePreviewProps> = ({ resumeData, template, templat
           ))}
         </div>
       ) : template === 'creative-designer' ? (
-        <div className="min-w-[320px]">
+        <div className="min-w-[320px] relative z-10">
           {renderCreativeDesignerTemplate()}
         </div>
       ) : (
-        <div className={`resume-preview-content p-6 sm:p-8 lg:p-10 ${textStyles.containerBg} transform transition-all duration-300 min-w-[320px] shadow-lg rounded-lg`} style={{margin: '0 auto', maxWidth: '210mm', borderLeft: template !== 'executive' && textStyles.border.includes('border-l-4') ? '4px solid' : 'none', borderLeftColor: template !== 'executive' && textStyles.border.includes('blue') ? '#3b82f6' : template !== 'executive' && textStyles.border.includes('cyan') ? '#06b6d4' : template !== 'executive' && textStyles.border.includes('teal') ? '#14b8a6' : 'transparent'}}>
+        <div className={`resume-preview-content relative p-6 sm:p-8 lg:p-10 ${textStyles.containerBg} transform transition-all duration-300 min-w-[320px] shadow-lg rounded-lg z-10`} style={{margin: '0 auto', maxWidth: '210mm', borderLeft: template !== 'executive' && textStyles.border.includes('border-l-4') ? '4px solid' : 'none', borderLeftColor: template !== 'executive' && textStyles.border.includes('blue') ? '#3b82f6' : template !== 'executive' && textStyles.border.includes('cyan') ? '#06b6d4' : template !== 'executive' && textStyles.border.includes('teal') ? '#14b8a6' : 'transparent'}}>
+          <div className="pointer-events-none select-none absolute top-4 right-4 z-20">
+            <span className="px-3 py-1.5 rounded-full border border-dashed border-gray-400/70 bg-white/80 text-[10px] sm:text-xs font-semibold tracking-wide text-gray-500 uppercase">
+              Preview Only – Download after Purchase
+            </span>
+          </div>
           <style>{`
             .resume-preview-content a {
               color: #2563eb !important;
@@ -955,7 +965,7 @@ const LivePreview: React.FC<LivePreviewProps> = ({ resumeData, template, templat
               </div>
               <div className="space-y-3 sm:space-y-4">
                 {resumeData.projects.map((project, index) => (
-                  <div key={index} className={`p-4 rounded-lg hover:shadow-md transition-shadow ${template === 'executive' ? 'bg-slate-700/50' : 'bg-gray-50'}`}>
+                  <div key={index} className="p-4 rounded-lg hover:shadow-md transition-shadow">
                     <div className="flex items-start justify-between">
                       <h3 className={`font-bold ${textStyles.header}`}>{project.title}</h3>
                       {project.url && (
@@ -991,7 +1001,7 @@ const LivePreview: React.FC<LivePreviewProps> = ({ resumeData, template, templat
               </div>
               <div className="space-y-2 sm:space-y-3">
                 {resumeData.education.map((edu, index) => (
-                  <div key={index} className={`p-3 rounded-lg ${template === 'executive' ? 'bg-slate-700/50' : 'bg-gray-50'}`}>
+                  <div key={index} className="p-3 rounded-lg">
                     <h3 className={`font-bold ${textStyles.header}`}>{edu.degree}</h3>
                     <p className={`${textStyles.accent}`}>{edu.school} • {edu.year}</p>
                   </div>
@@ -1075,7 +1085,7 @@ const LivePreview: React.FC<LivePreviewProps> = ({ resumeData, template, templat
                   {resumeData.skills.map((skill, index) => (
                     <span
                       key={index}
-                      className={`px-3 py-1.5 rounded-full text-sm font-medium ${textStyles.skills} border ${template === 'executive' ? 'border-slate-600' : 'border-gray-300'}`}
+                      className="px-3 py-1.5 rounded-full text-sm font-medium text-gray-900 border border-gray-300"
                     >
                       {skill}
                     </span>
@@ -1126,7 +1136,7 @@ const LivePreview: React.FC<LivePreviewProps> = ({ resumeData, template, templat
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {resumeData.languages.map((language, index) => (
-                  <div key={index} className={`p-3 rounded-lg ${template === 'executive' ? 'bg-slate-800 bg-opacity-50' : 'bg-white bg-opacity-50'}`}>
+                  <div key={index} className="p-3 rounded-lg">
                     <p className={`font-semibold ${textStyles.header}`}>{language.name}</p>
                     <p className={`text-sm ${template === 'executive' ? 'text-gray-400' : 'text-gray-600'}`}>{language.proficiency}</p>
                   </div>
