@@ -54,7 +54,7 @@ function App() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [exactMode, setExactMode] = useState(false);
-  const [loadingSave, setLoadingSave] = useState(false);
+  const [] = useState(false);
 
 
   useEffect(() => {
@@ -177,7 +177,15 @@ function App() {
         pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
       };
 
-      await html2pdf().set(opt).from(previewElement).save();
+      await html2pdf()
+        .set({
+          ...opt,
+          // Explicit type narrowing for type issues
+          image: { type: 'jpeg' as 'jpeg', quality: 0.98 }
+        })
+        .from(previewElement)
+        .save();
+
       showToast('PDF downloaded successfully!', 'success');
       setShowConfetti(true);
       setTimeout(() => setShowConfetti(false), 3000);
