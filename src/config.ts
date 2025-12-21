@@ -12,5 +12,5 @@
 
 export const IS_PURCHASED = false; // Change to true after purchase to enable downloads
 
-export const GUMROAD_URL = 'https://gumroad.com/l/ai-resume-builder-template';
+export const GUMROAD_URL = 'https://lokibhai.gumroad.com/l/resumebuild?wanted=true';
 
